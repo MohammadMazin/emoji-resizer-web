@@ -19,7 +19,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <Navbar/>
-        <div className="max-w-screen-2xl ml-auto mr-auto bg-red-500">
+        <div className="max-w-screen-2xl ml-auto mr-auto">
         {children}
         </div>
         </body>
