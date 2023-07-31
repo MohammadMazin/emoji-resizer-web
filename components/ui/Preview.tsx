@@ -1,11 +1,9 @@
-import { Button } from "./button"
+"use client";
+
+import Uploader from "./Uploader";
 
 const Preview = () => {
-  return (
-    <div className="flex-1 flex flex-col p-4 border-r-2 border-gray-400">
-        Preview
-    </div>
-  )
-}
+  return <Uploader />;
+};
 
-export default Preview
+export default Preview;

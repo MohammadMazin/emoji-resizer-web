@@ -1,10 +1,14 @@
+"use client";
 import Link from "next/link";
 import { Button } from "./button";
 import { BsCheckSquare } from "react-icons/bs";
 import { AiOutlineDownload } from "react-icons/ai";
-import {IoAlertCircleOutline} from "react-icons/io5"
+import { IoAlertCircleOutline } from "react-icons/io5";
+import useImageStore from "@/lib/store/store";
 
 const Options = () => {
+  const { images } = useImageStore();
+  console.log(images);
   return (
     <div className="flex-1 p-4 flex flex-col ">
       <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">
@@ -16,7 +20,7 @@ const Options = () => {
       <div className="mt-8 flex gap-4">
         <Button variant={"unselected"} className="flex-1">
           Discord Emotes
-          <BsCheckSquare className={"ml-2"} color="#1bab23" size={25}/>
+          <BsCheckSquare className={"ml-2"} color="#1bab23" size={25} />
         </Button>
         <Button variant={"selected"} className="flex-1">
           Discord Stickers
@@ -25,13 +29,13 @@ const Options = () => {
       <div className="mt-4 flex gap-4">
         <Button variant={"unselected"} className="flex-1">
           Twitch Emotes
-          <BsCheckSquare className={"ml-2"} color="#1bab23" size={25}/>
+          <BsCheckSquare className={"ml-2"} color="#1bab23" size={25} />
         </Button>
         <Button variant={"selected"} className="flex-1">
           Twitch Badges
         </Button>
       </div>
-      <Button radius={"none"} className="mt-8">
+      <Button radius={"none"} className="mt-8" disabled={images.length === 0}>
         <AiOutlineDownload /> Download
       </Button>
       <Link
@@ -39,7 +43,9 @@ const Options = () => {
         target="_blank"
         className="mt-auto"
       >
-        <Button variant={"link"}>Report an Issue <IoAlertCircleOutline className={"ml-2"}/></Button>
+        <Button variant={"link"}>
+          Report an Issue <IoAlertCircleOutline className={"ml-2"} />
+        </Button>
       </Link>
     </div>
   );
