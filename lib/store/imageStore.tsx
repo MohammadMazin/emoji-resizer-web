@@ -9,7 +9,9 @@ type ImageHolderState = {
 
 const useImageStore = create<ImageHolderState>((set) => ({
   images: [],
-  addImage: (image) => set((state) => ({ images: [...state.images, image] })),
+  addImage: (image) =>
+    set((state) => ({ images: [...state.images, ...image] })),
+  setImages: (images: any) => set((state) => ({ images: images })),
   removeImage: (image) =>
     set((state) => ({ images: state.images.filter((i: any) => i !== image) })),
 }));
