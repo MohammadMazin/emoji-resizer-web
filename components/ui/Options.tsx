@@ -14,17 +14,16 @@ const Options = () => {
   const { images } = useImageStore();
 
   const resizeAndDownload = async () => {
-    console.log(images);
     let selectedTypes = types.filter((type) => type.selected);
     let resizedImages = [];
     const zip = new JSZip();
+
     selectedTypes.forEach((type) => {
       type.sizes.forEach((size) => {
         resizedImages = images.map(
           (url, index) =>
             new Promise<void>((resolve, reject) => {
               const image = new Image();
-              console.log(image);
               image.onload = async () => {
                 // Resize image with a canvas
                 let canvas = document.createElement("canvas");
@@ -59,12 +58,11 @@ const Options = () => {
                   resolve();
                 }, "image/png");
               };
-              // image.onerror = reject;
               image.onerror = (e) => {
                 console.log("error", e);
                 reject();
               };
-              image.src = url;
+              image.src = url.blob.toString();
             })
         );
       });
@@ -91,7 +89,6 @@ const Options = () => {
       const content = await zip.generateAsync({ type: "blob" });
       saveAs(content, "images.zip");
     } catch (error) {
-      console.log(resizedImages);
       console.error("Failed to resize images and download zip:", error);
     }
   };
