@@ -14,6 +14,7 @@ const Options = () => {
   const { images } = useImageStore();
 
   const resizeAndDownload = async () => {
+    console.log(images);
     let selectedTypes = types.filter((type) => type.selected);
     let resizedImages = [];
     const zip = new JSZip();
@@ -21,8 +22,9 @@ const Options = () => {
       type.sizes.forEach((size) => {
         resizedImages = images.map(
           (url, index) =>
-            new Promise((resolve, reject) => {
+            new Promise<void>((resolve, reject) => {
               const image = new Image();
+              console.log(image);
               image.onload = async () => {
                 // Resize image with a canvas
                 let canvas = document.createElement("canvas");
@@ -31,7 +33,7 @@ const Options = () => {
                 // start with the original size
                 canvas.width = image.width;
                 canvas.height = image.height;
-                context.drawImage(image, 0, 0, canvas.width, canvas.height);
+                context!.drawImage(image, 0, 0, canvas.width, canvas.height);
 
                 // incrementally scale down the image until it's the desired size
                 while (canvas.width > 2 * size) {
@@ -44,11 +46,11 @@ const Options = () => {
                   finalCanvas.width = size;
                   finalCanvas.height = size;
                   const finalContext = finalCanvas.getContext("2d");
-                  finalContext.drawImage(canvas, 0, 0, size, size);
+                  finalContext!.drawImage(canvas, 0, 0, size, size);
                   canvas = finalCanvas;
                 }
 
-                canvas.toBlob((blob) => {
+                canvas.toBlob((blob: any) => {
                   // Add image to zip file
                   zip.file(
                     `${type.name}-image-${index + 1}-${size}x${size}.png`,
@@ -57,7 +59,11 @@ const Options = () => {
                   resolve();
                 }, "image/png");
               };
-              image.onerror = reject;
+              // image.onerror = reject;
+              image.onerror = (e) => {
+                console.log("error", e);
+                reject();
+              };
               image.src = url;
             })
         );
@@ -65,7 +71,7 @@ const Options = () => {
     });
 
     // A function to produce a new canvas that's half the size of the input canvas
-    function getHalfScaledCanvas(canvas) {
+    function getHalfScaledCanvas(canvas: HTMLCanvasElement) {
       const halfCanvas = document.createElement("canvas");
       halfCanvas.width = canvas.width / 2;
       halfCanvas.height = canvas.height / 2;
@@ -85,6 +91,7 @@ const Options = () => {
       const content = await zip.generateAsync({ type: "blob" });
       saveAs(content, "images.zip");
     } catch (error) {
+      console.log(resizedImages);
       console.error("Failed to resize images and download zip:", error);
     }
   };
@@ -130,7 +137,7 @@ const Options = () => {
         disabled={images.length === 0}
         onClick={resizeAndDownload}
       >
-        <AiOutlineDownload /> Download
+        <AiOutlineDownload className="mr-1" /> Download
       </Button>
       <Link
         href="https://github.com/MohammadMazin"
