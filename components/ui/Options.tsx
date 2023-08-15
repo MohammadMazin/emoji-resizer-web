@@ -93,10 +93,7 @@ const Options = () => {
                 canvas.toBlob((blob: any) => {
                   const [name] = url.data.name.split(".");
                   // Add image to zip file
-                  folder!.file(
-                    `${name}-${index + 1}-${size}x${size}.png`,
-                    blob
-                  );
+                  folder!.file(`${name}-${size}x${size}.png`, blob);
                   resolve();
                 }, "image/png");
               };

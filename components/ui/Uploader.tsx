@@ -1,7 +1,7 @@
 "use client";
 
 import { FiUpload } from "react-icons/fi";
-import { useDropzone } from "react-dropzone";
+import { Accept, useDropzone } from "react-dropzone";
 import useImageStore from "@/lib/store/imageStore";
 import ImagePreview from "./ImagePreview";
 
@@ -9,7 +9,7 @@ const Uploader = () => {
   const { images, addImage } = useImageStore();
 
   const { getRootProps, getInputProps } = useDropzone({
-    accept: "image/*",
+    accept: "image/*" as unknown as Accept,
     multiple: true,
     onDrop: (acceptedFiles) => {
       const files = acceptedFiles.map((file: File) => {
