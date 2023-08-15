@@ -117,7 +117,7 @@ const Options = () => {
       halfCanvas.height = canvas.height / 2;
 
       halfCanvas!
-        .getContext("2d")
+        .getContext("2d")!
         .drawImage(canvas, 0, 0, halfCanvas.width, halfCanvas.height);
 
       return halfCanvas;
@@ -134,6 +134,7 @@ const Options = () => {
 
       saveAs(content, `${output}.zip`);
     } catch (error) {
+      toast.error("Ran into ");
       console.error("Failed to resize images and download zip:", error);
     } finally {
       setLoading(false);
@@ -169,7 +170,7 @@ const Options = () => {
         className="appearance-none bg-transparent border-x-0 border-t-0 focus:outline-none"
         type="text"
         pattern="[0-9,]*"
-        placeholder="Enter aFolder Name"
+        placeholder="Enter a Folder Name"
         onChange={(e) => {
           setFolderName(e.target.value);
         }}
@@ -196,7 +197,7 @@ const Options = () => {
           );
         })}
       </div>
-      <div className="flex gap-4">
+      <div className="flex gap-4 items-center">
         <Input
           className="appearance-none bg-transparent border-x-0 border-t-0 focus:outline-none mt-4"
           type="text"
@@ -210,7 +211,7 @@ const Options = () => {
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger>
-              <BsInfoCircle className="cursor-pointer" />
+              <BsInfoCircle className="cursor-pointer" size={25} />
             </TooltipTrigger>
             <TooltipContent>
               <p>Enter sizes separated by comma</p>
@@ -224,14 +225,15 @@ const Options = () => {
         disabled={disableDownloadButton() || loading}
         onClick={resizeAndDownload}
       >
-        <AiOutlineDownload className="mr-1" /> Download as ZIP
+        <AiOutlineDownload className="mr-1" size={25} /> Download as ZIP
       </Button>
 
       <Dialog>
         <DialogTrigger className="mt-auto mr-auto">
           {" "}
           <Button variant={"link"}>
-            Share your feedback <IoAlertCircleOutline className={"ml-2"} />
+            Share your feedback{" "}
+            <IoAlertCircleOutline className={"ml-2"} size={25} />
           </Button>
         </DialogTrigger>
         <DialogContent>
