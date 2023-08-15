@@ -1,5 +1,4 @@
 "use client";
-
 import Uploader from "./Uploader";
 
 const Preview = () => {

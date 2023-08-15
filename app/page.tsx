@@ -6,9 +6,9 @@ export default function Home() {
   return (
     <main>
       <div className="flex h-[95vh]">
-      <Preview/>
-      <Options/>
+        <Preview />
+        <Options />
       </div>
     </main>
-  )
+  );
 }
