@@ -30,7 +30,12 @@ const Uploader = () => {
           <div className="flex gap-8 flex-wrap p-8 justify-center">
             {images.map((file, index) => (
               <>
-                <ImagePreview key={index} file={file.blob} size={125} />
+                <ImagePreview
+                  key={index}
+                  file={file.blob}
+                  size={125}
+                  removeIcon={true}
+                />
               </>
             ))}
           </div>

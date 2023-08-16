@@ -6,9 +6,15 @@ type ImagePreviewProps = {
   file: any;
   onClick?: any;
   size: number;
+  removeIcon?: boolean;
 };
 
-const ImagePreview = ({ file, size, onClick }: ImagePreviewProps) => {
+const ImagePreview = ({
+  file,
+  size,
+  onClick,
+  removeIcon = false,
+}: ImagePreviewProps) => {
   const { removeImage } = useImageStore();
 
   const handleClick = (event: any, file: any) => {
@@ -19,12 +25,14 @@ const ImagePreview = ({ file, size, onClick }: ImagePreviewProps) => {
   return (
     <>
       <div className="relative">
-        <div
-          onClick={(e) => handleClick(e, file)}
-          className="bg-red-500 absolute p-2 rounded-xl hover:bg-red-700 cursor-pointer"
-        >
-          <ImCross color="#FFF" size={12} />
-        </div>
+        {removeIcon && (
+          <div
+            onClick={(e) => handleClick(e, file)}
+            className="bg-red-500 absolute p-2 rounded-xl hover:bg-red-700 cursor-pointer"
+          >
+            <ImCross color="#FFF" size={12} />
+          </div>
+        )}
         <Image
           className="file"
           alt="emote"

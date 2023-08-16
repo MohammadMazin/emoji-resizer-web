@@ -31,6 +31,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import CONSTANTS from "@/lib/constanst";
 import toast from "react-hot-toast";
 
 const Options = () => {
@@ -148,22 +149,15 @@ const Options = () => {
     );
   }
 
-  function copyDiscordUsername() {
-    navigator.clipboard
-      .writeText("kayleberrsssies")
-      .then(() => toast.success("Copied Discord username to clipboard!"));
-  }
-
   return (
     <div className="flex-1 p-4 flex flex-col gap-4 ">
-      <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">
+      {/* <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">
         Emote Resizer
       </h1>
       <h3 className="scroll-m-20 text-2xl tracking-tight">
         For Twitch and Discord!
-      </h3>
+      </h3> */}
       <Input
-        // className="block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 placeholder-gray-400"
         className="appearance-none bg-transparent border-x-0 border-t-0 focus:outline-none"
         type="text"
         pattern="[0-9,]*"
@@ -172,6 +166,7 @@ const Options = () => {
           setFolderName(e.target.value);
         }}
       />
+
       <div className="mt-8 grid grid-cols-2 gap-4">
         {types.map((type) => {
           const { label, name, selected } = type;
@@ -186,14 +181,19 @@ const Options = () => {
             >
               {name}
               {selected ? (
-                <BsCheckSquare className={"ml-2"} color="#1bab23" size={25} />
+                <BsCheckSquare
+                  className={"ml-2"}
+                  color="#1bab23"
+                  size={CONSTANTS.IconSize}
+                />
               ) : (
-                <BsSquare className={"ml-2"} size={25} />
+                <BsSquare className={"ml-2"} size={CONSTANTS.IconSize} />
               )}
             </Button>
           );
         })}
       </div>
+
       <div className="flex gap-4 items-center">
         <Input
           className="appearance-none bg-transparent border-x-0 border-t-0 focus:outline-none mt-4"
@@ -208,7 +208,10 @@ const Options = () => {
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger>
-              <BsInfoCircle className="cursor-pointer" size={25} />
+              <BsInfoCircle
+                className="cursor-pointer"
+                size={CONSTANTS.IconSize}
+              />
             </TooltipTrigger>
             <TooltipContent>
               <p>Enter sizes separated by comma</p>
@@ -217,59 +220,73 @@ const Options = () => {
           </Tooltip>
         </TooltipProvider>
       </div>
+
       <Button
         radius={"none"}
         disabled={disableDownloadButton() || loading}
         onClick={resizeAndDownload}
       >
-        <AiOutlineDownload className="mr-1" size={25} /> Download as ZIP
+        <AiOutlineDownload className="mr-1" size={CONSTANTS.IconSize} />{" "}
+        Download as ZIP
       </Button>
 
-      <Dialog>
-        <DialogTrigger className="mt-auto mr-auto">
-          {" "}
-          <Button variant={"link"}>
-            Share your feedback{" "}
-            <IoAlertCircleOutline className={"ml-2"} size={25} />
-          </Button>
-        </DialogTrigger>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle className="mt-2">
-              Found an issue have a suggestion? You can reach me out on these
-              platforms
-            </DialogTitle>
-            <DialogDescription>
-              <div className="flex flex-col gap-4 mt-8">
-                <Button variant="outline">
-                  <Link
-                    className="flex items-center"
-                    href="https://twitter.com/kayleberries"
-                    target={"_blank"}
-                  >
-                    <BsTwitter className="mr-4" /> Twitter
-                  </Link>
-                </Button>
-
-                <Button variant="outline">
-                  <Link
-                    className="flex items-center"
-                    href="https://github.com/MohammadMazin/emoji-resizer-web"
-                    target={"_blank"}
-                  >
-                    <BsGithub className="mr-4" /> Github
-                  </Link>
-                </Button>
-
-                <Button variant="outline" onClick={copyDiscordUsername}>
-                  <BsDiscord className="mr-4" /> Discord - kayleberries
-                </Button>
-              </div>
-            </DialogDescription>
-          </DialogHeader>
-        </DialogContent>
-      </Dialog>
+      <FeedbackModal />
     </div>
+  );
+};
+
+const FeedbackModal = () => {
+  function copyDiscordUsername() {
+    navigator.clipboard
+      .writeText("kayleberrsssies")
+      .then(() => toast.success("Copied Discord username to clipboard!"));
+  }
+
+  return (
+    <Dialog>
+      <DialogTrigger className="mt-auto mr-auto">
+        {" "}
+        <Button variant={"link"}>
+          Share your feedback{" "}
+          <IoAlertCircleOutline className={"ml-2"} size={CONSTANTS.IconSize} />
+        </Button>
+      </DialogTrigger>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle className="mt-2">
+            Found an issue have a suggestion? You can reach me out on these
+            platforms
+          </DialogTitle>
+          <DialogDescription>
+            <div className="flex flex-col gap-4 mt-8">
+              <Button variant="outline">
+                <Link
+                  className="flex items-center"
+                  href="https://twitter.com/kayleberries"
+                  target={"_blank"}
+                >
+                  <BsTwitter className="mr-4" /> Twitter
+                </Link>
+              </Button>
+
+              <Button variant="outline">
+                <Link
+                  className="flex items-center"
+                  href="https://github.com/MohammadMazin/emoji-resizer-web"
+                  target={"_blank"}
+                >
+                  <BsGithub className="mr-4" /> Github
+                </Link>
+              </Button>
+
+              <Button variant="outline" onClick={copyDiscordUsername}>
+                <BsDiscord className="mr-4" /> Discord - kayleberries
+              </Button>
+            </div>
+          </DialogDescription>
+        </DialogHeader>
+      </DialogContent>
+    </Dialog>
   );
 };
 
