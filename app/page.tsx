@@ -5,7 +5,7 @@ import Preview from "@/components/ui/Preview";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Twitch from "@/components/ui/Twitch";
 import CONSTANTS from "@/lib/constanst";
-import { BsDiscord, BsTwitch } from "react-icons/bs";
+import { BsDiscord, BsGithub, BsTwitch, BsTwitter } from "react-icons/bs";
 
 export default function Home() {
   const tabs = {
@@ -25,7 +25,7 @@ export default function Home() {
 
   return (
     <main>
-      <div className="flex flex-col md:flex-row h-[95vh]">
+      <div className="flex flex-col md:flex-row h-[90vh]">
         <Preview />
         <Tabs defaultValue={tabs.options.name} className="flex-1">
           <TabsList className="flex">
@@ -39,7 +39,10 @@ export default function Home() {
               <BsTwitch size={CONSTANTS.IconSize} className="mr-2" /> View on
               Twitch
             </TabsTrigger>
-            <TabsTrigger value={tabs.discord.name} className="flex-1">
+            <TabsTrigger
+              value={tabs.discord.name}
+              className="flex-1 data-[state=active]:bg-discord"
+            >
               <BsDiscord size={CONSTANTS.IconSize} className="mr-2" />
               View on Discord
             </TabsTrigger>

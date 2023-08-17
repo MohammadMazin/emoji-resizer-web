@@ -9,7 +9,8 @@ module.exports = {
     ],
     theme: {
         fontSize: {
-            sm: '1.3rem',
+            'sx': '12px',
+            sm: '1rem',
             base: '2rem',
             xl: '1.25rem',
             '2xl': '1.563rem',
@@ -32,11 +33,21 @@ module.exports = {
                 ring: "hsl(var(--ring))",
                 background: "hsl(var(--background))",
                 foreground: "hsl(var(--foreground))",
-                "twitch": "hsl(var(--twitch))",
-                "twitch-chat-dark": "hsl(var(--twitch-chat-dark))",
-                "twitch-chat-dark-hover": "hsl(var(--twitch-chat-dark-hover))",
-                "twitch-chat-light": "hsl(var(--twitch-chat-light))",
-                "twitch-chat-light-hover": "hsl(var(--twitch-chat-light-hover))",
+                twitch: {
+                    DEFAULT: "hsl(var(--twitch))",
+                    "chat-dark": "hsl(var(--twitch-chat-dark))",
+                    "chat-dark-hover": "hsl(var(--twitch-chat-dark-hover))",
+                    "chat-light": "hsl(var(--twitch-chat-light))",
+                    "chat-light-hover": "hsl(var(--twitch-chat-light-hover))",
+                },
+                discord: {
+                    DEFAULT: "hsl(var(--discord))",
+                    100: "hsl(235, 85%, 95%)",
+                    "chat-dark": "hsl(var(--discord-chat-dark))",
+                    "chat-dark-hover": "hsl(var(--discord-chat-dark-hover))",
+                    "chat-light": "hsl(var(--discord-chat-light))",
+                    "chat-light-hover": "hsl(var(--discord-chat-light-hover))",
+                },
                 primary: {
                     DEFAULT: "hsl(var(--primary))",
                     foreground: "hsl(var(--primary-foreground))",

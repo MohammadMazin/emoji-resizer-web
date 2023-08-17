@@ -40,6 +40,13 @@
     --twitch-chat-dark-hover: 240, 2%, 25%;
     --twitch-chat-light: 0, 0%, 100%;
     --twitch-chat-light-hover: 0, 0%, 95%;
+
+    --discord: 235, 70%, 61%;
+    --discord-chat-dark: 223, 7%, 21%;
+    --discord-chat-dark-hover: 223, 7%, 19%;
+    --discord-chat-light: 0, 0%, 100%;
+    --discord-chat-light-hover: 0, 0%, 97%;
+
   }
 
   .dark {
@@ -47,7 +54,7 @@
     --foreground: 210 40% 98%;
 
     --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
+    --muted-foreground: 214, 8%, 61%;
 
     --popover: 222.2 84% 4.9%;
     --popover-foreground: 210 40% 98%;
