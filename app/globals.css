@@ -4,7 +4,7 @@
 
 @layer base {
   :root {
-    --background: 212 56% 10%;
+    --background: 292 94% 8%;
     --foreground: 0 0% 90%;
 
     --muted: 210 40% 96.1%;
@@ -19,14 +19,14 @@
     --border: 214.3 31.8% 91.4%;
     --input: 214.3 31.8% 91.4%;
 
-    --primary: 222.2 47.4% 60.2%;
-    --primary-foreground: 210 40% 98%;
+    --primary: 42 94% 51%;
+    --primary-foreground: 210 40% 5%;
 
     --secondary: 210 40% 96.1%;
     --secondary-foreground: 222.2 47.4% 11.2%;
 
     --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    --accent-foreground: 50.2 47.4% 11.2%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
@@ -35,17 +35,17 @@
 
     --radius: 0.5rem;
 
-    --twitch: 265, 100%, 64%;
-    --twitch-chat-dark: 240, 6%, 10%;
-    --twitch-chat-dark-hover: 240, 2%, 25%;
-    --twitch-chat-light: 0, 0%, 100%;
-    --twitch-chat-light-hover: 0, 0%, 95%;
+    --twitch: 265 100% 64%;
+    --twitch-chat-dark: 240 6% 10%;
+    --twitch-chat-dark-hover: 240 2% 25%;
+    --twitch-chat-light: 0 0% 100%;
+    --twitch-chat-light-hover: 0 0% 95%;
 
-    --discord: 235, 70%, 61%;
-    --discord-chat-dark: 223, 7%, 21%;
-    --discord-chat-dark-hover: 223, 7%, 19%;
-    --discord-chat-light: 0, 0%, 100%;
-    --discord-chat-light-hover: 0, 0%, 97%;
+    --discord: 235 70% 61%;
+    --discord-chat-dark: 223 7% 21%;
+    --discord-chat-dark-hover: 223 7% 19%;
+    --discord-chat-light: 0 0% 100%;
+    --discord-chat-light-hover: 0 0% 97%;
 
   }
 
@@ -54,7 +54,7 @@
     --foreground: 210 40% 98%;
 
     --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 214, 8%, 61%;
+    --muted-foreground: 214 8% 61%;
 
     --popover: 222.2 84% 4.9%;
     --popover-foreground: 210 40% 98%;

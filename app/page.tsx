@@ -5,7 +5,7 @@ import Preview from "@/components/ui/Preview";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Twitch from "@/components/ui/Twitch";
 import CONSTANTS from "@/lib/constanst";
-import { BsDiscord, BsGithub, BsTwitch, BsTwitter } from "react-icons/bs";
+import { BsDiscord, BsTwitch, BsGear } from "react-icons/bs";
 
 export default function Home() {
   const tabs = {
@@ -25,11 +25,12 @@ export default function Home() {
 
   return (
     <main>
-      <div className="flex flex-col md:flex-row h-[90vh]">
+      <div className="flex flex-col md:flex-row h-[90vh] py-4 gap-4">
         <Preview />
         <Tabs defaultValue={tabs.options.name} className="flex-1">
           <TabsList className="flex">
             <TabsTrigger value={tabs.options.name} className="flex-1">
+              <BsGear size={CONSTANTS.IconSize} className="mr-2" />
               Options
             </TabsTrigger>
             <TabsTrigger
