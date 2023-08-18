@@ -48,6 +48,9 @@ module.exports = {
                     "chat-light": "hsl(var(--discord-chat-light))",
                     "chat-light-hover": "hsl(var(--discord-chat-light-hover))",
                 },
+                twitter: {
+                    DEFAULT: "hsl(203, 89%, 53%)",
+                },
                 primary: {
                     DEFAULT: "hsl(var(--primary))",
                     foreground: "hsl(var(--primary-foreground))",
