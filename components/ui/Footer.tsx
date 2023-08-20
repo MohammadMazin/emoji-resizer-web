@@ -88,7 +88,7 @@ const FeedbackModal = () => {
           </DialogHeader>
         </DialogContent>
       </Dialog>
-      <span className="ml-auto">V1.0 - April 2023</span>
+      <span className="ml-auto">V1.0 - August 2023</span>
     </div>
   );
 };

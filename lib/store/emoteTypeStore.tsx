@@ -1,4 +1,4 @@
-import create from "zustand";
+import { create } from "zustand";
 
 interface EmoteType {
   label: string;
@@ -29,13 +29,13 @@ const typesArray = [
   {
     label: "discordEmotes",
     name: "Discord Emotes",
-    sizes: [112],
+    sizes: [128],
     selected: false,
   },
   {
     label: "discordStickers",
     name: "Discord Stickers",
-    sizes: [128],
+    sizes: [320],
     selected: false,
   },
 ];
