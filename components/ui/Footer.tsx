@@ -35,7 +35,7 @@ const FeedbackModal = () => {
         <DialogTrigger className="mt-auto">
           {" "}
           <Button variant={"link"}>
-            Share your feedback{" "}
+            V1.0.1 - Share your feedback{" "}
             <IoAlertCircleOutline
               className={"ml-2"}
               size={CONSTANTS.IconSize}
@@ -45,7 +45,7 @@ const FeedbackModal = () => {
         <DialogContent>
           <DialogHeader>
             <DialogTitle className="mt-2">
-              Found an issue have a suggestion? You can reach me out on these
+              Found an issue or have suggestions? You can reach me out on these
               platforms
             </DialogTitle>
             <DialogDescription>
@@ -88,7 +88,6 @@ const FeedbackModal = () => {
           </DialogHeader>
         </DialogContent>
       </Dialog>
-      <span className="ml-auto">V1.0 - August 2023</span>
     </div>
   );
 };

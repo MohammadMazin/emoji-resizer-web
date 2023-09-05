@@ -1,15 +1,8 @@
 "use client";
+import pica from "pica";
 import { useState } from "react";
-import Link from "next/link";
 import { Button } from "./button";
-import {
-  BsCheckSquare,
-  BsSquare,
-  BsInfoCircle,
-  BsTwitter,
-  BsGithub,
-  BsDiscord,
-} from "react-icons/bs";
+import { BsCheckSquare, BsSquare, BsInfoCircle } from "react-icons/bs";
 import { AiOutlineDownload } from "react-icons/ai";
 import { IoAlertCircleOutline } from "react-icons/io5";
 import useImageStore from "@/lib/store/imageStore";
@@ -24,19 +17,17 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import CONSTANTS from "@/lib/constanst";
-import toast from "react-hot-toast";
 
 const Options = () => {
   const { types, updateSelectedTypes } = useEmoteTypeStore();
-  const { images } = useImageStore();
+  const { images, removeAllImages } = useImageStore();
   const [customSize, setCustomSize] = useState<string | null>(null);
   const [folderName, setFolderName] = useState<string>("Emotes");
   const [loading, setLoading] = useState<boolean>(false);
 
-  async function resizeAndDownload() {
+  async function resizeAndDownload(): Promise<void> {
     setLoading(true);
-    let selectedTypes = types.filter((type) => type.selected);
-    let resizedImages: Promise<void>[] = [];
+    const selectedTypes = types.filter((type) => type.selected);
     const zip = new JSZip();
 
     if (customSize && customSize !== "") {
@@ -51,84 +42,70 @@ const Options = () => {
       });
     }
 
-    selectedTypes.forEach((type) => {
-      type.sizes.forEach((size) => {
-        resizedImages = images.map(
-          (url, index) =>
-            new Promise<void>((resolve, reject) => {
-              const folder = zip.folder(type.name);
-              const image = new Image();
-              image.onload = async () => {
-                // Resize image with a canvas
-                let canvas = document.createElement("canvas");
-                let context = canvas.getContext("2d");
-
-                // start with the original size
-                canvas.width = image.width;
-                canvas.height = image.height;
-                context!.drawImage(image, 0, 0, canvas.width, canvas.height);
-
-                // incrementally scale down the image until it's the desired size
-                while (canvas.width > 2 * size) {
-                  canvas = getHalfScaledCanvas(canvas);
-                }
-
-                if (canvas.width > size) {
-                  // final step
-                  const finalCanvas = document.createElement("canvas");
-                  finalCanvas.width = size;
-                  finalCanvas.height = size;
-                  const finalContext = finalCanvas.getContext("2d");
-                  finalContext!.drawImage(canvas, 0, 0, size, size);
-                  canvas = finalCanvas;
-                }
-
-                canvas.toBlob((blob: any) => {
-                  const [name] = url.data.name.split(".");
-                  // Add image to zip file
-                  folder!.file(`${name}-${size}x${size}.png`, blob);
-                  resolve();
-                }, "image/png");
-              };
-              image.onerror = (e) => {
-                console.log("error", e);
-                reject();
-              };
-              image.src = url.blob.toString();
-            })
-        );
-      });
-    });
-
-    // A function to produce a new canvas that's half the size of the input canvas
-    function getHalfScaledCanvas(canvas: HTMLCanvasElement) {
-      const halfCanvas = document.createElement("canvas");
-      halfCanvas.width = canvas.width / 2;
-      halfCanvas.height = canvas.height / 2;
-
-      halfCanvas!
-        .getContext("2d")!
-        .drawImage(canvas, 0, 0, halfCanvas.width, halfCanvas.height);
-
-      return halfCanvas;
-    }
-
     try {
-      // Wait for all images to be added to the zip
-      await Promise.all(resizedImages);
+      for (const type of selectedTypes) {
+        for (const size of type.sizes) {
+          for (const url of images) {
+            const image = await loadImage(url.blob.toString());
+            const resizedCanvas = await resizeImage(image, size);
 
-      // Generate zip file and trigger download
+            const folder = zip.folder(type.name);
+            const [name] = url.data.name.split(".");
+            const filename = `${name}-${size}x${size}.png`;
+
+            const resizedBlob = await canvasToBlob(resizedCanvas);
+            folder!.file(filename, resizedBlob);
+          }
+        }
+      }
+
       const content = await zip.generateAsync({ type: "blob" });
 
-      let output = folderName ? folderName : "Emotes";
-
+      const output = folderName ? folderName : "Emotes";
       saveAs(content, `${output}.zip`);
     } catch (error) {
-      toast.error("Ran into ");
       console.error("Failed to resize images and download zip:", error);
     } finally {
       setLoading(false);
     }
+  }
+
+  async function loadImage(url: string): Promise<HTMLImageElement> {
+    return new Promise((resolve, reject) => {
+      const image = new Image();
+      image.onload = () => resolve(image);
+      image.onerror = (e) => reject(e);
+      image.src = url;
+    });
+  }
+
+  async function resizeImage(
+    image: HTMLImageElement,
+    size: number
+  ): Promise<HTMLCanvasElement> {
+    const canvas = document.createElement("canvas");
+    canvas.width = size;
+    canvas.height = size;
+    const context = canvas.getContext("2d");
+
+    const p = pica(); // Create a new pica instance
+    await p.resize(image, canvas, { unsharpAmount: 80, unsharpRadius: 0.6 }); // Apply sharpening
+
+    return canvas;
+  }
+
+  async function canvasToBlob(canvas: HTMLCanvasElement): Promise<Blob> {
+    return new Promise((resolve) => {
+      canvas.toBlob((blob) => {
+        if (blob) {
+          resolve(blob);
+        } else {
+          // Handle the case where toBlob returns null
+          console.error("canvas.toBlob returned null");
+          resolve(new Blob()); // Create an empty blob as a placeholder
+        }
+      }, "image/png");
+    });
   }
 
   function handleBClick(label: string) {
@@ -220,6 +197,14 @@ const Options = () => {
       >
         <AiOutlineDownload className="mr-1" size={CONSTANTS.IconSize} />{" "}
         Download as ZIP
+      </Button>
+      <Button
+        radius={"none"}
+        disabled={images.length === 0 || loading}
+        onClick={removeAllImages}
+        variant="destructive"
+      >
+        Clear All Emotes
       </Button>
     </div>
   );

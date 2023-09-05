@@ -10,6 +10,7 @@ type ImageHolderState = {
   images: ImageData[];
   addImage: (image: ImageData[]) => void;
   removeImage: (image: string) => void;
+  removeAllImages: () => void;
 };
 
 const useImageStore = create<ImageHolderState>((set) => ({
@@ -21,6 +22,7 @@ const useImageStore = create<ImageHolderState>((set) => ({
     set((state) => ({
       images: state.images.filter((i: ImageData) => i.blob !== image),
     })),
+  removeAllImages: () => set((state) => ({ images: [] })),
 }));
 
 export default useImageStore;
