@@ -1,4 +1,5 @@
 import useImageStore from "@/lib/store/imageStore";
+import Image from "next/image";
 import React from "react";
 import ImagePreview from "./ImagePreview";
 
@@ -19,6 +20,14 @@ const Twitch = () => {
           viewers, and it was giving them too much &quot;stream&quot; anxiety! -
           ChatGPT
         </p>
+        {/* <ImagePreview file={}/> */}
+        <Image
+          src="/noImage-1.png"
+          alt="no uploaded image"
+          width={200}
+          height={180}
+          className="mt-4"
+        />
       </section>
     );
   }

@@ -20,7 +20,7 @@ const Uploader = () => {
   });
 
   return (
-    <div className="flex-1 flex flex-col p-4 border-2 border-gray-400 border-dashed rounded-xl  overflow-y-scroll">
+    <div className="flex-1 flex flex-col p-4 border-2 border-gray-400 border-dashed rounded-xl overflow-y-scroll">
       <div
         {...getRootProps()}
         className="flex flex-col justify-center items-center h-full gap-2"

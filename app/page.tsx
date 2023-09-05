@@ -25,7 +25,7 @@ export default function Home() {
 
   return (
     <main>
-      <div className="flex flex-col md:flex-row h-[90vh] py-4 gap-4">
+      <div className="flex flex-col min-h-[90vh] lg:flex-row md:h-[90vh] py-4 gap-4">
         <Preview />
         <Tabs defaultValue={tabs.options.name} className="flex-1">
           <TabsList className="flex">
