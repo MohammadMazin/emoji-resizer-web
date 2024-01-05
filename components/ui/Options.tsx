@@ -4,7 +4,6 @@ import { useState } from "react";
 import { Button } from "./button";
 import { BsCheckSquare, BsSquare, BsInfoCircle } from "react-icons/bs";
 import { AiOutlineDownload } from "react-icons/ai";
-import { IoAlertCircleOutline } from "react-icons/io5";
 import useImageStore from "@/lib/store/imageStore";
 import useEmoteTypeStore from "@/lib/store/emoteTypeStore";
 import JSZip from "jszip";

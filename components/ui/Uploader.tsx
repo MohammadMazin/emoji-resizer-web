@@ -1,9 +1,10 @@
 "use client";
-
+import { useEffect } from "react";
 import { FiUpload } from "react-icons/fi";
 import { Accept, useDropzone } from "react-dropzone";
 import useImageStore from "@/lib/store/imageStore";
 import ImagePreview from "./ImagePreview";
+import { ImageData } from "@/lib/store/imageStore";
 
 const Uploader = () => {
   const { images, addImage } = useImageStore();
@@ -18,6 +19,40 @@ const Uploader = () => {
       addImage(files);
     },
   });
+
+  useEffect(() => {
+    const handlePaste = (event) => {
+      if (event.clipboardData) {
+        const items = event.clipboardData.items;
+        const files = [];
+
+        for (let i = 0; i < items.length; i++) {
+          console.log(items[i]);
+          if (items[i].kind === "file" && items[i].type.includes("image/")) {
+            const file = items[i].getAsFile();
+            const defaultFileName = `image-${Date.now()}.${
+              file.type.split("/")[1]
+            }`;
+            const newFile = new File([file], defaultFileName, {
+              type: file.type,
+              lastModified: file.lastModified,
+            });
+            files.push({ data: newFile, blob: URL.createObjectURL(newFile) });
+          }
+        }
+
+        if (files.length > 0) {
+          addImage(files);
+        }
+      }
+    };
+
+    window.addEventListener("paste", handlePaste);
+
+    return () => {
+      window.removeEventListener("paste", handlePaste);
+    };
+  }, []);
 
   return (
     <div className="flex-1 flex flex-col p-4 border-2 border-gray-400 border-dashed rounded-xl overflow-y-scroll">
