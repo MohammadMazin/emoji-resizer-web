@@ -13,6 +13,7 @@ import { Button } from "@/components/ui/button";
 import { IoAlertCircleOutline } from "react-icons/io5";
 import { toast } from "react-hot-toast";
 import CONSTANTS from "@/lib/constanst";
+import Image from "next/image";
 
 const Footer = () => {
   return (
@@ -30,12 +31,12 @@ const FeedbackModal = () => {
   }
 
   return (
-    <div className="max-w-screen-2xl flex items-center ml-auto mr-auto">
+    <div className="max-w-screen-2xl flex justify-between items-center ml-auto mr-auto">
       <Dialog>
         <DialogTrigger className="mt-auto">
           {" "}
           <Button variant={"link"}>
-            V1.0.1 - Share your feedback{" "}
+            Share your feedback{" "}
             <IoAlertCircleOutline
               className={"ml-2"}
               size={CONSTANTS.IconSize}
@@ -88,6 +89,15 @@ const FeedbackModal = () => {
           </DialogHeader>
         </DialogContent>
       </Dialog>
+      <Link href="https://www.buymeacoffee.com/kayleberries" target="_blank">
+        <Image
+          src="https://cdn.buymeacoffee.com/buttons/v2/default-violet.png"
+          alt="Buy Me A Coffee"
+          width={150}
+          height={30}
+          className="hover:opacity-80"
+        />
+      </Link>
     </div>
   );
 };

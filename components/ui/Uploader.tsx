@@ -1,10 +1,10 @@
 "use client";
 import { useEffect } from "react";
-import { FiUpload } from "react-icons/fi";
+import { FiUpload, FiPlus } from "react-icons/fi";
 import { Accept, useDropzone } from "react-dropzone";
 import useImageStore from "@/lib/store/imageStore";
 import ImagePreview from "./ImagePreview";
-import { ImageData } from "@/lib/store/imageStore";
+import CONSTANTS from "@/lib/constanst";
 
 const Uploader = () => {
   const { images, addImage } = useImageStore();
@@ -21,13 +21,13 @@ const Uploader = () => {
   });
 
   useEffect(() => {
-    const handlePaste = (event) => {
+    const handlePaste = (event: any) => {
       if (event.clipboardData) {
         const items = event.clipboardData.items;
         const files = [];
+        console.log(items);
 
         for (let i = 0; i < items.length; i++) {
-          console.log(items[i]);
           if (items[i].kind === "file" && items[i].type.includes("image/")) {
             const file = items[i].getAsFile();
             const defaultFileName = `image-${Date.now()}.${
@@ -55,7 +55,7 @@ const Uploader = () => {
   }, []);
 
   return (
-    <div className="flex-1 flex flex-col p-4 border-2 border-gray-400 border-dashed rounded-xl overflow-y-scroll">
+    <div className="flex-1 flex flex-col p-4 border-2 border-gray-400 border-dashed rounded-xl overflow-y-scroll cursor-pointer hover:text-gray-400">
       <div
         {...getRootProps()}
         className="flex flex-col justify-center items-center h-full gap-2"
@@ -73,10 +73,16 @@ const Uploader = () => {
                 />
               </>
             ))}
+            {images.length < CONSTANTS.MaxImagesAllowed && (
+              <div className="flex items-center justify-center h-[125px] w-[125px] border-2 border-gray-400 border-dashed rounded-xl text-gray-400 hover:text-gray-500 hover:border-gray-500">
+                <FiPlus size={50} />
+              </div>
+            )}
           </div>
         ) : (
-          <div className="flex flex-col justify-center items-center h-full gap-2 cursor-pointer hover:text-gray-400">
-            <p>Drag and drop some images here, or click to select images </p>
+          <div className="flex flex-col justify-center items-center h-full gap-2 cursor-pointer ">
+            <p>Drag and drop some images here, or click to select images</p>
+            <p>You can also press Ctrl + V to paste your image here</p>
             <FiUpload size={50} />
           </div>
         )}

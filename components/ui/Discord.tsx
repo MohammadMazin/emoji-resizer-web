@@ -64,11 +64,11 @@ const Discord = () => {
         </section>
       </div>
       <div
-        className="bg-discord-chat-light hover:bg-discord-chat-light-hover flex-1 p-4 flex gap-2"
+        className="bg-discord-chat-light hover:bg-discord-chat-light-hover flex-1 p-4 flex gap-2 h-max"
         style={{ minHeight: "2.75rem" }}
       >
         <ProfilePicture />
-        <section className="flex flex-col">
+        <section className="flex flex-col h-max">
           <div className="flex gap-2 items-center">
             <span className="text-sm font-medium text-twitch">
               Kayleberries
@@ -77,12 +77,12 @@ const Discord = () => {
               Today at 1:22 AM
             </span>
           </div>
-          <div className="flex items-center gap-1">
+          <div className="flex items-center gap-1 flex-wrap">
             {images.map((file, index) => (
               <ImagePreview key={index} file={file.blob} size={48} />
             ))}
           </div>
-          <div className="flex items-center gap-1 mt-1">
+          <div className="flex items-center gap-1 mt-1 flex-wrap">
             {images.map((file, index) => (
               <span
                 key={file.data.name}
@@ -130,7 +130,7 @@ const Discord = () => {
               Today at 1:22 AM
             </span>
           </div>
-          <div className="flex items-center gap-1 text-black">
+          <div className="flex items-center gap-1 text-black flex-wrap">
             {images.map((file, index) => (
               <ImagePreview key={index} file={file.blob} size={22} />
             ))}

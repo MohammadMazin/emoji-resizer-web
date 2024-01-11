@@ -37,15 +37,15 @@ export default function Home() {
               value={tabs.twitch.name}
               className="flex-1 data-[state=active]:bg-twitch"
             >
-              <BsTwitch size={CONSTANTS.IconSize} className="mr-2" /> View on
-              Twitch
+              <BsTwitch size={CONSTANTS.IconSize} className="mr-2" />
+              Twitch View
             </TabsTrigger>
             <TabsTrigger
               value={tabs.discord.name}
               className="flex-1 data-[state=active]:bg-discord"
             >
               <BsDiscord size={CONSTANTS.IconSize} className="mr-2" />
-              View on Discord
+              Discord View
             </TabsTrigger>
           </TabsList>
           <TabsContent value={tabs.options.name}>

@@ -40,6 +40,7 @@
     --twitch-chat-dark-hover: 240 2% 25%;
     --twitch-chat-light: 0 0% 100%;
     --twitch-chat-light-hover: 0 0% 95%;
+    --twitch-text: 1rem;
 
     --discord: 235 70% 61%;
     --discord-chat-dark: 223 7% 21%;

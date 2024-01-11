@@ -9,8 +9,9 @@ module.exports = {
     ],
     theme: {
         fontSize: {
-            'sx': '12px',
+            'sx': '13px',
             sm: '1rem',
+            "twitch": "hsl(var(--twitch-text))",
             base: '2rem',
             xl: '1.25rem',
             '2xl': '1.563rem',
