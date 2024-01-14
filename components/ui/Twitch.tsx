@@ -1,6 +1,7 @@
 import useImageStore from "@/lib/store/imageStore";
 import Image from "next/image";
 import React from "react";
+import TwitchChat from "../Twitch/TwitchChat";
 import ImagePreview from "./ImagePreview";
 
 const Twitch = () => {
@@ -34,46 +35,8 @@ const Twitch = () => {
 
   return (
     <div className="flex flex-col">
-      <div className="bg-twitch-chat-dark p-2">
-        <div className="bg-twitch-chat-dark hover:bg-twitch-chat-dark-hover flex-1 flex gap-2 p-2 items-center flex-wrap">
-          {images.map((file, index) => (
-            <>
-              <ImagePreview key={index} file={file.blob} size={18} />
-            </>
-          ))}
-          <span className="text-sx font-semibold text-pink-400">
-            kayleberries:
-          </span>
-          {images.map((file, index) => (
-            <>
-              <ImagePreview key={index} file={file.blob} size={28} />
-            </>
-          ))}
-          <span className="text-sx">
-            hi i love your stream, do you sell cakes?
-          </span>
-        </div>
-      </div>
-      <div className="bg-twitch-chat-light p-2">
-        <div className="bg-twitch-chat-light hover:bg-twitch-chat-light-hover flex-1 flex gap-2 p-2 items-center text-black flex-wrap">
-          {images.map((file, index) => (
-            <>
-              <ImagePreview key={index} file={file.blob} size={18} />
-            </>
-          ))}
-          <span className="text-sx font-semibold text-pink-400">
-            kayleberries:
-          </span>
-          {images.map((file, index) => (
-            <>
-              <ImagePreview key={index} file={file.blob} size={28} />
-            </>
-          ))}
-          <span className="text-sx">
-            hi i love your stream, do you sell cakes?
-          </span>
-        </div>
-      </div>
+      <TwitchChat darkMode={true} />
+      <TwitchChat />
     </div>
   );
 };

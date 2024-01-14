@@ -47,19 +47,16 @@ const Options = () => {
           for (const url of images) {
             const image = await loadImage(url.blob.toString());
             const resizedCanvas = await resizeImage(image, size);
+            const resizedBlob = await canvasToBlob(resizedCanvas);
 
             const folder = zip.folder(type.name);
-            const [name] = url.data.name.split(".");
-            const filename = `${name}-${size}x${size}.png`;
-
-            const resizedBlob = await canvasToBlob(resizedCanvas);
+            const [name, format] = url.data.name.split(".");
+            const filename = `${name}-${size}x${size}.${format}`;
             folder!.file(filename, resizedBlob);
           }
         }
       }
-
       const content = await zip.generateAsync({ type: "blob" });
-
       const output = folderName ? folderName : "Emotes";
       saveAs(content, `${output}.zip`);
     } catch (error) {
