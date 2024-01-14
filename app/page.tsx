@@ -1,9 +1,9 @@
 "use client";
-import Discord from "@/components/ui/Discord";
+import Discord from "@/components/Discord/Discord";
 import Options from "@/components/ui/Options";
 import Preview from "@/components/ui/Preview";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import Twitch from "@/components/ui/Twitch";
+import Twitch from "@/components/Twitch/Twitch";
 import CONSTANTS from "@/lib/constanst";
 import { BsDiscord, BsTwitch, BsGear } from "react-icons/bs";
 

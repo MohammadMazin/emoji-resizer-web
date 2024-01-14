@@ -23,26 +23,24 @@ const ImagePreview = ({
   };
 
   return (
-    <>
-      <div className="relative">
-        {removeIcon && (
-          <div
-            onClick={(e) => handleClick(e, file)}
-            className="bg-red-500 absolute p-2 rounded-xl hover:bg-red-700 cursor-pointer"
-          >
-            <ImCross color="#FFF" size={12} />
-          </div>
-        )}
-        <Image
-          className="file"
-          alt="emote"
-          src={file}
-          width={size}
-          height={size}
-          onClick={onClick}
-        />
-      </div>
-    </>
+    <div className="relative">
+      {removeIcon && (
+        <div
+          onClick={(e) => handleClick(e, file)}
+          className="bg-red-500 absolute p-2 rounded-xl hover:bg-red-700 cursor-pointer"
+        >
+          <ImCross color="#FFF" size={12} />
+        </div>
+      )}
+      <Image
+        className="file"
+        alt="emote"
+        src={file}
+        width={size}
+        height={size}
+        onClick={onClick}
+      />
+    </div>
   );
 };
 

@@ -5,9 +5,13 @@ import ImagePreview from "../ui/ImagePreview";
 
 type TwitchChatProps = {
   darkMode?: boolean;
+  defaultBadges?: any[];
 };
 
-const TwitchChat = ({ darkMode = false }: TwitchChatProps) => {
+const TwitchChat = ({
+  darkMode = false,
+  defaultBadges = [],
+}: TwitchChatProps) => {
   const { images } = useImageStore();
 
   if (images.length === 0) {
@@ -47,13 +51,19 @@ const TwitchChat = ({ darkMode = false }: TwitchChatProps) => {
           darkMode
             ? "bg-twitch-chat-dark hover:bg-twitch-chat-dark-hover"
             : "bg-twitch-chat-light hover:bg-twitch-chat-light-hover text-black"
-        } flex-1 flex gap-2 p-2 items-center flex-wrap`}
+        } flex-1 flex gap-1 p-2 items-center flex-wrap`}
       >
         {images.map((file, index) => (
           <>
             <ImagePreview key={index} file={file.blob} size={18} />
           </>
         ))}
+        {defaultBadges.map((file, index) => (
+          <>
+            <ImagePreview key={index} file={file.link} size={18} />
+          </>
+        ))}
+
         <span className="text-sx font-semibold text-pink-400">
           kayleberries:
         </span>
