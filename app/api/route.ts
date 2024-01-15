@@ -5,12 +5,6 @@ export async function GET() {
   return NextResponse.json({ data: "yeet" });
 }
 
-export const config = {
-  api: {
-    bodyParser: false,
-  },
-}
-
 export async function POST(req: NextRequest, res:NextResponse) {
   try {
 
