@@ -41,7 +41,6 @@ const Twitch = () => {
           viewers, and it was giving them too much &quot;stream&quot; anxiety! -
           ChatGPT
         </p>
-        {/* <ImagePreview file={}/> */}
         <Image
           src="/noImage-1.png"
           alt="no uploaded image"
