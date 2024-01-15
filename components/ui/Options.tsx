@@ -1,4 +1,3 @@
-"use client";
 import pica from "pica";
 import { useState } from "react";
 import { Button } from "./button";
@@ -16,6 +15,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import CONSTANTS from "@/lib/constanst";
+import GIFOptions from "../GIFOptions";
 
 const Options = () => {
   const { types, updateSelectedTypes } = useEmoteTypeStore();
@@ -42,20 +42,67 @@ const Options = () => {
     }
 
     try {
+      const promises = [];
       for (const type of selectedTypes) {
         for (const size of type.sizes) {
           for (const url of images) {
-            const image = await loadImage(url.blob.toString());
-            const resizedCanvas = await resizeImage(image, size);
-            const resizedBlob = await canvasToBlob(resizedCanvas);
-
-            const folder = zip.folder(type.name);
             const [name, format] = url.data.name.split(".");
-            const filename = `${name}-${size}x${size}.${format}`;
-            folder!.file(filename, resizedBlob);
+
+            if (format === "gif") {
+              const reader = new FileReader();
+              const folder = zip.folder(type.name);
+              const filename = `${name}-${size}x${size}.${format}`;
+
+              const blob = await getBlobFromURL(url.blob.toString());
+
+              const promise = new Promise<void>((resolve, reject) => {
+                reader.onload = async function (event) {
+                  try {
+                    const readerData = event.target!.result;
+                    const base64String = arrayBufferToBase64(readerData);
+
+                    const resizedGif = await fetch("api/", {
+                      method: "POST",
+                      headers: {
+                        "Content-Type": "application/json",
+                      },
+                      body: JSON.stringify({ base64String, size }),
+                    });
+
+                    const data = await resizedGif.json();
+
+                    const blobOutput = new Blob(
+                      [new Uint8Array(data.resizedGif.data)],
+                      {
+                        type: "image/gif",
+                      }
+                    );
+                    folder!.file(filename, blobOutput);
+                    resolve(); // Resolve the promise once the blob is added
+                  } catch (error) {
+                    console.log("error ", error);
+                    reject(error); // Reject the promise in case of an error
+                  }
+                };
+              });
+
+              reader.readAsArrayBuffer(blob);
+              promises.push(promise);
+            } else {
+              const image = await loadImage(url.blob.toString());
+              const resizedCanvas = await resizeImage(image, size);
+              const resizedBlob = await canvasToBlob(resizedCanvas);
+
+              const folder = zip.folder(type.name);
+              const filename = `${name}-${size}x${size}.${format}`;
+              folder!.file(filename, resizedBlob);
+            }
           }
         }
       }
+
+      // Wait for all promises to resolve before generating and downloading the zip
+      await Promise.all(promises);
       const content = await zip.generateAsync({ type: "blob" });
       const output = folderName ? folderName : "Emotes";
       saveAs(content, `${output}.zip`);
@@ -112,6 +159,21 @@ const Options = () => {
     return (
       images.length === 0 || types.every((type) => type.selected === false)
     );
+  }
+
+  function arrayBufferToBase64(arrayBuffer: any) {
+    const uint8Array = new Uint8Array(arrayBuffer);
+    let binaryString = "";
+    for (let i = 0; i < uint8Array.length; i++) {
+      binaryString += String.fromCharCode(uint8Array[i]);
+    }
+    return btoa(binaryString);
+  }
+
+  async function getBlobFromURL(blobURL: string) {
+    const response = await fetch(blobURL);
+    const blob = await response.blob();
+    return blob;
   }
 
   return (
@@ -185,6 +247,8 @@ const Options = () => {
           </Tooltip>
         </TooltipProvider>
       </div>
+
+      {/* <GIFOptions /> */}
 
       <Button
         radius={"none"}
