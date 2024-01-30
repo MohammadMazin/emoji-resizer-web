@@ -3,6 +3,7 @@ import { useState } from "react";
 import { Button } from "./button";
 import { BsCheckSquare, BsSquare, BsInfoCircle } from "react-icons/bs";
 import { AiOutlineDownload } from "react-icons/ai";
+import { ImSpinner2 } from "react-icons/im";
 import useImageStore from "@/lib/store/imageStore";
 import useEmoteTypeStore from "@/lib/store/emoteTypeStore";
 import JSZip from "jszip";
@@ -178,12 +179,6 @@ const Options = () => {
 
   return (
     <div className="flex-1 p-4 flex flex-col gap-4 ">
-      {/* <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">
-        Emote Resizer
-      </h1>
-      <h3 className="scroll-m-20 text-2xl tracking-tight">
-        For Twitch and Discord!
-      </h3> */}
       <Input
         className="appearance-none bg-transparent border-x-0 border-t-0 focus:outline-none"
         type="text"
@@ -255,8 +250,20 @@ const Options = () => {
         disabled={disableDownloadButton() || loading}
         onClick={resizeAndDownload}
       >
-        <AiOutlineDownload className="mr-1" size={CONSTANTS.IconSize} />{" "}
-        Download as ZIP
+        {loading ? (
+          <>
+            <ImSpinner2
+              className="mr-1 animate-spin"
+              size={CONSTANTS.IconSize}
+            />{" "}
+            Processing
+          </>
+        ) : (
+          <>
+            <AiOutlineDownload className="mr-1" size={CONSTANTS.IconSize} />{" "}
+            Download as ZIP
+          </>
+        )}
       </Button>
       <Button
         radius={"none"}

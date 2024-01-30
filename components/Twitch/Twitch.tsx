@@ -63,13 +63,15 @@ const Twitch = () => {
                   variant={badge.selected ? "selected" : "unselected"}
                   key={badge.name}
                   onClick={() => selectDefaultBadge(badge.name)}
+                  className={`hover:opacity-100 transition-opacity ${
+                    badge.selected ? "opacity-100" : "opacity-50"
+                  }`}
                 >
                   <Image
                     height={18}
                     width={18}
                     src={badge.link}
                     alt={`${badge.name} twitch badge`}
-                    className={badge.selected ? "opacity-100" : "opacity-50"}
                   />
                 </Button>
               </TooltipTrigger>

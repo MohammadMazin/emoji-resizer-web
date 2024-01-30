@@ -11,6 +11,23 @@ const inter = Inter({ subsets: ["latin"] });
 export const metadata: Metadata = {
   title: "Emote Stop - Resizing and cropping emotes made easy",
   description: "Resizing your emotes for Twitch, Discord, and more!",
+  applicationName: "Emote Stop",
+  keywords: [
+    "twitch",
+    "discord",
+    "emote resize",
+    "emote resize online",
+    "emoji resize",
+  ],
+  themeColor: "#220128",
+  creator: "Kayleberries",
+  openGraph: {
+    type: "website",
+    description: "Resizing your emotes for Twitch, Discord, and more!",
+    title: "Emote Stop - Resizing and cropping emotes made easy",
+    siteName: "Emote Stop",
+    url: "https://emotestop.vercel.app",
+  },
 };
 
 export default function RootLayout({

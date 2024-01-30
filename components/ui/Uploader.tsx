@@ -55,7 +55,7 @@ const Uploader = () => {
   }, []);
 
   return (
-    <div className="flex-1 flex flex-col p-4 border-2 border-gray-400 border-dashed rounded-xl overflow-y-scroll cursor-pointer hover:text-gray-400">
+    <div className="h-full flex-1 flex flex-col p-4 border-2 border-gray-400 border-dashed rounded-xl overflow-y-scroll cursor-pointer hover:text-gray-400">
       <div
         {...getRootProps()}
         className="flex flex-col justify-center items-center h-full gap-2"
@@ -80,7 +80,7 @@ const Uploader = () => {
             )}
           </div>
         ) : (
-          <div className="flex flex-col justify-center items-center h-full gap-2 cursor-pointer ">
+          <div className="flex flex-col justify-center items-center h-full gap-2 cursor-pointer text-center">
             <p>Drag and drop some images here, or click to select images</p>
             <p>You can also press Ctrl + V to paste your image here</p>
             <FiUpload size={50} />

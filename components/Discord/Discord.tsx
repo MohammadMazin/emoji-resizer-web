@@ -37,9 +37,9 @@ const Discord = () => {
   }
 
   return (
-    <>
+    <div className="overflow-y-scroll  max-h-[75vh]">
       <Info message="Click on an emote to see how it looks as a role next to the username!" />
-      <div className="overflow-y-scroll max-h-[75vh] rounded-xl">
+      <div className="rounded-xl">
         <DiscordChat
           darkMode
           messageType="simple"
@@ -73,8 +73,9 @@ const Discord = () => {
           role={selectedRole}
           setSelectedRole={setSelectedRole}
         />
+        <div className="py-[7rem] lg:hidden">ss</div>
       </div>
-    </>
+    </div>
   );
 };
 

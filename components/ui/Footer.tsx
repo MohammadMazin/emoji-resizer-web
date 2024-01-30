@@ -14,6 +14,7 @@ import { IoAlertCircleOutline } from "react-icons/io5";
 import { toast } from "react-hot-toast";
 import CONSTANTS from "@/lib/constanst";
 import Image from "next/image";
+import coffee_yellow from "@/public/coffee-yellow.png";
 
 const Footer = () => {
   return (
@@ -26,21 +27,18 @@ const Footer = () => {
 const FeedbackModal = () => {
   function copyDiscordUsername() {
     navigator.clipboard
-      .writeText("kayleberrsssies")
+      .writeText("kayleberries")
       .then(() => toast.success("Copied Discord username to clipboard!"));
   }
 
   return (
-    <div className="max-w-screen-2xl flex justify-between items-center ml-auto mr-auto">
+    <div className="max-w-screen-2xl flex justify-between items-center ml-auto mr-auto p-2">
       <Dialog>
         <DialogTrigger className="mt-auto">
           {" "}
           <Button variant={"link"}>
             Share your feedback{" "}
-            <IoAlertCircleOutline
-              className={"ml-2"}
-              size={CONSTANTS.IconSize}
-            />
+            <IoAlertCircleOutline size={CONSTANTS.IconSize} />
           </Button>
         </DialogTrigger>
         <DialogContent>
@@ -50,52 +48,57 @@ const FeedbackModal = () => {
               platforms
             </DialogTitle>
             <DialogDescription>
-              <div className="flex flex-col gap-4 mt-8">
-                <Button
-                  variant="outline"
-                  className="border-twitter hover:bg-twitter/50 hover:text-foreground"
+              <div className="flex flex-col justify-center items-center gap-4 mt-8">
+                <Link
+                  className="flex items-center w-full justify-center"
+                  href="https://twitter.com/kayleberries"
+                  target={"_blank"}
                 >
-                  <Link
-                    className="flex items-center"
-                    href="https://twitter.com/kayleberries"
-                    target={"_blank"}
+                  <Button
+                    variant="outline"
+                    className="border-twitter hover:bg-twitter/50 hover:text-foreground w-full"
                   >
                     <BsTwitter size={CONSTANTS.IconSize} className="mr-4" />{" "}
                     Twitter
-                  </Link>
-                </Button>
+                  </Button>
+                </Link>
 
                 <Button
                   variant="outline"
-                  className="border-discord hover:bg-discord/50 hover:text-foreground"
+                  className="border-discord hover:bg-discord/50 hover:text-foreground w-full justify-center "
                   onClick={copyDiscordUsername}
                 >
                   <BsDiscord size={CONSTANTS.IconSize} className="mr-4" />{" "}
                   Discord - kayleberries
                 </Button>
 
-                <Button variant="outline">
-                  <Link
-                    className="flex items-center"
-                    href="https://github.com/MohammadMazin/emoji-resizer-web"
-                    target={"_blank"}
-                  >
+                <Link
+                  className="flex items-center w-full justify-center"
+                  href="https://github.com/MohammadMazin/emoji-resizer-web"
+                  target={"_blank"}
+                >
+                  <Button variant="outline" className="w-full">
                     <BsGithub size={CONSTANTS.IconSize} className="mr-4" />{" "}
                     Github
-                  </Link>
-                </Button>
+                  </Button>
+                </Link>
               </div>
             </DialogDescription>
           </DialogHeader>
         </DialogContent>
       </Dialog>
-      <Link href="https://www.buymeacoffee.com/kayleberries" target="_blank">
+      <Link
+        href="https://www.buymeacoffee.com/kayleberries"
+        target="_blank"
+        className="mr-4"
+      >
         <Image
-          src="https://cdn.buymeacoffee.com/buttons/v2/default-violet.png"
+          src={coffee_yellow}
           alt="Buy Me A Coffee"
           width={150}
           height={30}
-          className="hover:opacity-80"
+          placeholder="blur"
+          className="hover:opacity-80 transition-opacity"
         />
       </Link>
     </div>

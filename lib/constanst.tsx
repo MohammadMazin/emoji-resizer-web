@@ -52,6 +52,46 @@ const CONSTANTS = {
       link: "https://assets.help.twitch.tv/article/img/659115-04.png",
       selected: false,
     },
+    {
+      name: "Turbo User",
+      link: "https://static-cdn.jtvnw.net/badges/v1/bd444ec6-8f34-4bf9-91f4-af1e3428d80f/1",
+      selected: false,
+    },
+    {
+      name: "Prime Gaming User",
+      link: "https://static-cdn.jtvnw.net/badges/v1/a1dd5073-19c3-4911-8cb4-c464a7bc1510/1",
+      selected: false,
+    },
+    {
+      name: "Subscriber",
+      link: "https://assets.help.twitch.tv/article/img/000002722-04.png",
+      selected: false,
+    },
+    {
+      name: "Founders Badge",
+      link: "https://assets.help.twitch.tv/article/img/000002722-05.png",
+      selected: false,
+    },
+    {
+      name: "Cheer Chat Badge",
+      link: "https://assets.help.twitch.tv/article/img/000002722-06.png",
+      selected: false,
+    },
+    {
+      name: "Sub Gifter Badge",
+      link: "https://assets.help.twitch.tv/article/img/000002722-07.png",
+      selected: false,
+    },
+    {
+      name: "Leaderboard Badge",
+      link: "https://assets.help.twitch.tv/article/img/000002722-08.png",
+      selected: false,
+    },
+    {
+      name: "Hype Train Badge",
+      link: "https://assets.help.twitch.tv/article/img/000002722-09.png",
+      selected: false,
+    },
   ],
 };
 
