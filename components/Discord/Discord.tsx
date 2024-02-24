@@ -53,6 +53,19 @@ const Discord = () => {
         />
         <DiscordChat
           darkMode
+          messageType="simple"
+          isReply
+          role={selectedRole}
+          setSelectedRole={setSelectedRole}
+        />
+        <DiscordChat
+          messageType="simple"
+          isReply
+          role={selectedRole}
+          setSelectedRole={setSelectedRole}
+        />
+        <DiscordChat
+          darkMode
           messageType="small"
           role={selectedRole}
           setSelectedRole={setSelectedRole}
