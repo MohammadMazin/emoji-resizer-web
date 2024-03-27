@@ -55,7 +55,6 @@ export async function POST(req: NextRequest, res:NextResponse) {
     encoder.setDelay(delay)
     encoder.setRepeat(0)
     const transparentColor = await findTransparentColor(base64Array, size)
-    console.log('c: ',transparentColor)
     encoder.setTransparent(0xFFF)
     encoder.setQuality(quality*3)
     encoder.start()
