@@ -3,8 +3,8 @@ import GIFEncoder from 'gif-encoder-custom';
 import sharp from 'sharp';
 import { createCanvas, Image } from 'canvas';
 
-const base64ToBuffer = (base64) => {
-    const base64Str = base64.split(';base64,').pop();
+const base64ToBuffer = (base64: string) => {
+    const base64Str = base64.split(';base64,').pop() as string;
     return Buffer.from(base64Str, 'base64');
 };
 
