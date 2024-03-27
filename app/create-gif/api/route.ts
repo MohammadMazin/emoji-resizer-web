@@ -1,57 +1,80 @@
 import { NextRequest, NextResponse } from "next/server";
-import GIFEncoder from 'gifencoder';
+import GIFEncoder from 'gif-encoder-custom';
 import sharp from 'sharp';
-import fs from 'fs';
 import { createCanvas, Image } from 'canvas';
-
-export async function GET() {
-  return NextResponse.json({ data: "yeet" });
-}
 
 const base64ToBuffer = (base64) => {
     const base64Str = base64.split(';base64,').pop();
     return Buffer.from(base64Str, 'base64');
 };
 
-const processImage = async (base64Img) => {
+const processImage = async (base64Img: string, size: number) => {
     const imgBuffer = base64ToBuffer(base64Img);
-    // Using sharp to resize the image or any other processing needed
     const processedBuffer = await sharp(imgBuffer)
-        .resize(320, 240) // Example: resizing to 320x240. Adjust as needed.
+        .resize(size, size)
         .toBuffer();
     return processedBuffer;
 };
 
+const findTransparentColor = async (base64Array: string[], size: number) => {
+  const colorCounts = {};
+
+  for (const base64Img of base64Array) {
+    const processedBuffer = await processImage(base64Img, size);
+    const image = await sharp(processedBuffer).raw().toBuffer();
+    
+    for (let i = 0; i < image.length; i += 4) {
+      const color = image.slice(i, i + 3).toString();
+      colorCounts[color] = (colorCounts[color] || 0) + 1;
+    }
+  }
+
+  let transparentColor = null;
+  let minCount = Infinity;
+  for (const color in colorCounts) {
+    if (colorCounts[color] < minCount) {
+      transparentColor = color;
+      minCount = colorCounts[color];
+    }
+  }
+
+  return parseInt(transparentColor as string, 10);
+};
+
 export async function POST(req: NextRequest, res:NextResponse) {
   try {
+    const body = await req.json()
+    const { base64Array, size , delay,quality} = body
 
-    const body = await req.json();
+    const canvas = createCanvas(size, size)
+    const ctx = canvas.getContext('2d')
 
-    console.log(body.base64Array.length)
+    const encoder = new GIFEncoder(size, size)
+    encoder.setDelay(delay)
+    encoder.setRepeat(0)
+    const transparentColor = await findTransparentColor(base64Array, size)
+    console.log('c: ',transparentColor)
+    encoder.setTransparent(0xFFF)
+    encoder.setQuality(quality*3)
+    encoder.start()
 
-    
-    const encoder = new GIFEncoder(320, 240); // Adjust size as needed
-    const stream = encoder.createWriteStream({ repeat: 0, delay: 500, quality: 10 })
-        .pipe(fs.createWriteStream('output.gif'));
+    for (const base64Img of base64Array) {
+      const processedBuffer = await processImage(base64Img, size)
+      const img = new Image()
+      img.src = processedBuffer
 
-    encoder.start();
+      ctx.clearRect(0, 0, size, size)
 
-    const canvas = createCanvas(320, 240); // Adjust size as needed
-    const ctx = canvas.getContext('2d');
-
-    for (const base64Img of body.base64Array) {
-        const processedBuffer = await processImage(base64Img);
-        const img = new Image();
-        img.src = processedBuffer;
-        ctx.drawImage(img, 0, 0, 320, 240); // Adjust drawing sizes as needed
-        encoder.addFrame(ctx);
+      ctx.drawImage(img, 0, 0)
+      encoder.addFrame(ctx)
     }
 
-    encoder.finish();
-    console.log('GIF created successfully!');
+    encoder.finish()
+
+    const resizedGif = encoder.out.getData()
 
     return NextResponse.json(
-      { resizedGif: encoder },
+      { resizedGif },
       { status: 200 }
     );
   } catch (error) {
@@ -62,37 +85,3 @@ export async function POST(req: NextRequest, res:NextResponse) {
     )
   }
 }
-
-
-
-
-
-
-// export async function POST(req: NextRequest) {
-//   try {
-//     // Assuming the GIF is sent in the request body
-//     const originalGif = req.body.gif;
-
-//     // Optional: Resize the GIF using Sharp
-//     const resizedGif = await sharp(originalGif)
-//       .resize({ width: 500 }) // Example resizing
-//       .toBuffer();
-
-//     // Optimize the GIF using Imagemin
-//     const optimizedGif = await imagemin.buffer(resizedGif, {
-//       plugins: [
-//         imageminGiflossy({
-//           optimizationLevel: 3,
-//           lossy: 80
-//         }),
-//       ],
-//     });
-
-//     // Return the optimized GIF
-//     NextResponse.status(200).send(optimizedGif);
-//   } catch (error) {
-//     NextResponse.status(500).send('Error processing GIF');
-//   }
- 
-//   return NextResponse.json('')
-// }

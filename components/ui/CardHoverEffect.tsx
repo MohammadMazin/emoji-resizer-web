@@ -19,15 +19,13 @@ export const HoverEffect = ({
   let [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const pathname = usePathname();
 
-  console.log(pathname);
-
   return (
-    <div className={cn("flex w-25", className)}>
+    <div className={cn("flex ", className)}>
       {items.map((item, idx) => (
         <Link
           href={item?.link}
           key={item?.link}
-          className="relative group  block p-2 h-full w-full"
+          className="relative group w-max block p-2 h-full w-full"
           onMouseEnter={() => setHoveredIndex(idx)}
           onMouseLeave={() => setHoveredIndex(null)}
         >
@@ -43,7 +41,7 @@ export const HoverEffect = ({
                 }}
                 exit={{
                   opacity: 0,
-                  transition: { duration: 0.15, delay: 0.2 },
+                  transition: { duration: 0.1, delay: 0.1 },
                 }}
               />
             )}
@@ -69,7 +67,7 @@ export const Card = ({
   return (
     <div
       className={cn(
-        "rounded-xl h-full  overflow-hidden border-2 border-yellow-500 dark:border-white/[0.2]  relative z-20",
+        "rounded-sm h-full  overflow-hidden border-2 border-yellow-500 dark:border-white/[0.2]  relative z-20",
         className
       )}
     >
