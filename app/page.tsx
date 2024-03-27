@@ -27,7 +27,7 @@ export default function Home() {
   return (
     <main className="overflow-hidden">
       <OnboardingModal />
-      <div className="flex flex-col min-h-[90vh] lg:flex-row md:h-[90vh] p-4 gap-4 lg:justify-center lg:items-center">
+      <div className="flex flex-col min-h-[85vh] lg:flex-row md:h-[85vh] px-4 gap-4 lg:justify-center lg:items-center">
         <section className="h-[30vh] lg:h-full w-full">
           <Preview />
         </section>
