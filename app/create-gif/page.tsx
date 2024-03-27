@@ -141,7 +141,6 @@ export default function CreateGif() {
               height={280}
               alt="resized GIF"
               />
-            <Button>Download</Button>
             <span><b>GIF Size:</b> {memory/(1000)} KB</span>
             <div>
               <h1 className='text-2xl font-bold'>Limits</h1>

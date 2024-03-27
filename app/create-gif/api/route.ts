@@ -17,7 +17,9 @@ const processImage = async (base64Img: string, size: number) => {
 };
 
 const findTransparentColor = async (base64Array: string[], size: number) => {
-  const colorCounts = {};
+  const colorCounts: {
+    [key: string]: number;
+  } = {};
 
   for (const base64Img of base64Array) {
     const processedBuffer = await processImage(base64Img, size);
