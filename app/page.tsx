@@ -7,11 +7,6 @@ import Twitch from "@/components/Twitch/Twitch";
 import CONSTANTS from "@/lib/constanst";
 import { BsDiscord, BsTwitch, BsGear } from "react-icons/bs";
 import OnboardingModal from "@/components/OnboardingModal";
-import { Metadata } from "next";
-
-export const metadata: Metadata = {
-  title: "Resize Emotes",
-};
 
 export default function Home() {
   const tabs = {
