@@ -9,6 +9,7 @@ import { arrayBuffer } from "stream/consumers";
 import { Checkbox } from "@/components/ui/checkbox";
 import Image from "next/image";
 import Info from "@/components/ui/Info";
+import { Metadata } from "next";
 
 export default function CreateGif() {
   const { images, removeAllImages } = useImageStore();
@@ -129,26 +130,34 @@ export default function CreateGif() {
 
           {/* <Checkbox /> */}
 
-          <Button className="mt-4" onClick={createGifAPI} disabled={loading || images.length === 0}>
+          <Button
+            className="mt-4"
+            onClick={createGifAPI}
+            disabled={loading || images.length === 0}
+          >
             Create GIF
           </Button>
-          {
-            memory > 0 &&
-            <div className='w-full flex flex-col items-center justify-content-center'>
-            <Image
-              src={`data:image/png;base64,${imgData}`}
-              width={280}
-              height={280}
-              alt="resized GIF"
+          {memory > 0 && (
+            <div className="w-full flex flex-col items-center justify-content-center">
+              <Image
+                src={`data:image/png;base64,${imgData}`}
+                width={280}
+                height={280}
+                alt="resized GIF"
               />
-            <span><b>GIF Size:</b> {memory/(1000)} KB</span>
-            <div>
-              <h1 className='text-2xl font-bold'>Limits</h1>
-              <p className='text-xs text-gray'><b>Twitch:</b> 1MB file size max for auto-resize mode. If using manual mode, each of the file sizes cannot exceed 512KB</p>
-              <p>GIF images cannot be more than 60 frames</p>
+              <span>
+                <b>GIF Size:</b> {memory / 1000} KB
+              </span>
+              <div>
+                <h1 className="text-2xl font-bold">Limits</h1>
+                <p className="text-xs text-gray">
+                  <b>Twitch:</b> 1MB file size max for auto-resize mode. If
+                  using manual mode, each of the file sizes cannot exceed 512KB
+                </p>
+                <p>GIF images cannot be more than 60 frames</p>
+              </div>
             </div>
-          </div>
-          }
+          )}
         </section>
       </div>
     </main>
