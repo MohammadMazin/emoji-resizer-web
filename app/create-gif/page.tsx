@@ -11,10 +11,6 @@ import Image from "next/image";
 import Info from "@/components/ui/Info";
 import { Metadata } from "next";
 
-export const metadata: Metadata = {
-  title: "Create GIFs ",
-};
-
 export default function CreateGif() {
   const { images, removeAllImages } = useImageStore();
   const [imgData, setImgData] = useState("");
