@@ -5,12 +5,18 @@ import { Inter } from "next/font/google";
 import { Toaster } from "react-hot-toast";
 import { Analytics } from "@vercel/analytics/react";
 import Footer from "@/components/ui/Footer";
+import NextTopLoader from "nextjs-toploader";
+import CONSTANTS from "@/lib/constanst";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Emote Stop - Resizing and cropping emotes made easy",
-  description: "Resizing your emotes for Twitch, Discord, and more!",
+  title: {
+    default: "Emote Stop",
+    template: "%s | Emote Stop",
+  },
+  description:
+    "Resizing your emotes for Twitch, Discord, and more! Or create new animated emotes!",
   applicationName: "Emote Stop",
   keywords: [
     "twitch",
@@ -18,15 +24,14 @@ export const metadata: Metadata = {
     "emote resize",
     "emote resize online",
     "emoji resize",
+    "create gifs",
+    "ezgif",
+    "create gif from images",
   ],
   themeColor: "#220128",
   creator: "Kayleberries",
-  openGraph: {
-    type: "website",
-    description: "Resizing your emotes for Twitch, Discord, and more!",
-    title: "Emote Stop - Resizing and cropping emotes made easy",
-    siteName: "Emote Stop",
-    url: "https://emotestop.vercel.app",
+  twitter: {
+    card: "summary_large_image",
   },
 };
 
@@ -40,6 +45,10 @@ export default function RootLayout({
       <body className={inter.className}>
         <Analytics />
         <Toaster />
+        <NextTopLoader
+          color={CONSTANTS.colors.secondary}
+          template='<div class="bar" role="bar"><div class="peg"></div></div>'
+        />
         <Navbar />
         <div className="max-w-screen-2xl ml-auto mr-auto">{children}</div>
         <Footer />

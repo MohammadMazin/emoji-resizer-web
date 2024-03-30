@@ -93,6 +93,9 @@ const CONSTANTS = {
       selected: false,
     },
   ],
+  colors: {
+    secondary: "#f8b10d",
+  },
 };
 
 export default CONSTANTS;
