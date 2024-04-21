@@ -36,6 +36,19 @@ const DiscordChat = ({
     }
   }
 
+  function assignBackground() {
+    if (isReply) {
+      if (darkMode)
+        return "border-s-4 border-yellow-400 bg-[#444037] hover:bg-[#403d38]";
+      else
+        return "border-s-4 border-yellow-400 bg-[#fdf7ea] hover:bg-[#fcefd6]";
+    }
+
+    if (darkMode)
+      return "bg-discord-chat-dark hover:bg-discord-chat-dark-hover";
+    else return "bg-discord-chat-light hover:bg-discord-chat-light-hover";
+  }
+
   if (images.length === 0) {
     return (
       <section className="h-full flex flex-col items-center p-8 text-center">
@@ -62,24 +75,7 @@ const DiscordChat = ({
 
   return (
     <div
-      className={`${
-        darkMode
-          ? "bg-discord-chat-dark hover:bg-discord-chat-dark-hover"
-          : "bg-discord-chat-light hover:bg-discord-chat-light-hover"
-      } 
-      ${
-        isReply &&
-        darkMode &&
-        "border-s-4 border-yellow-400 bg-[#444037] hover:bg-[#403d38]"
-      }
-
-      ${
-        isReply &&
-        !darkMode &&
-        "border-s-4 border-yellow-400 bg-[#fdf7ea] hover:bg-[#fcefd6]"
-      }
-      
-      flex-1 p-4 flex-col gap-2 h-max`}
+      className={`${assignBackground()} flex-1 p-4 flex-col gap-2 h-max`}
       style={{ minHeight: "2.75rem" }}
     >
       {isReply && (
@@ -111,6 +107,7 @@ const DiscordChat = ({
           ))}
         </section>
       )}
+
       <div className="flex-1 flex gap-2">
         <ProfilePicture />
         <section className="flex flex-col  h-max">
