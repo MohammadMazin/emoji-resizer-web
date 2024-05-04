@@ -7,6 +7,7 @@ import { Analytics } from "@vercel/analytics/react";
 import Footer from "@/components/ui/Footer";
 import NextTopLoader from "nextjs-toploader";
 import CONSTANTS from "@/lib/constanst";
+import { CSPostHogProvider } from "./providers";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -43,15 +44,17 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <Analytics />
-        <Toaster />
-        <NextTopLoader
-          color={CONSTANTS.colors.secondary}
-          template='<div class="bar" role="bar"><div class="peg"></div></div>'
-        />
-        <Navbar />
-        <div className="max-w-screen-2xl ml-auto mr-auto">{children}</div>
-        <Footer />
+        <CSPostHogProvider>
+          <Analytics />
+          <Toaster />
+          <NextTopLoader
+            color={CONSTANTS.colors.secondary}
+            template='<div class="bar" role="bar"><div class="peg"></div></div>'
+          />
+          <Navbar />
+          <div className="max-w-screen-2xl ml-auto mr-auto">{children}</div>
+          <Footer />
+        </CSPostHogProvider>
       </body>
     </html>
   );
