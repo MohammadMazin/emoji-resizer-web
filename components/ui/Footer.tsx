@@ -12,6 +12,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { IoAlertCircleOutline } from "react-icons/io5";
 import { toast } from "react-hot-toast";
+import posthog from "posthog-js";
 import CONSTANTS from "@/lib/constanst";
 import Image from "next/image";
 import coffee_yellow from "@/public/coffee-yellow.png";
@@ -36,7 +37,12 @@ const FeedbackModal = () => {
       <Dialog>
         <DialogTrigger className="mt-auto">
           {" "}
-          <Button variant={"link"}>
+          <Button
+            variant={"link"}
+            onClick={() => {
+              posthog.capture("feedback_clicked");
+            }}
+          >
             Share your feedback{" "}
             <IoAlertCircleOutline size={CONSTANTS.IconSize} />
           </Button>
@@ -98,6 +104,9 @@ const FeedbackModal = () => {
           width={150}
           height={30}
           placeholder="blur"
+          onClick={() => {
+            posthog.capture("buyMeACoffee_clicked");
+          }}
           className="hover:opacity-80 transition-opacity"
         />
       </Link>
