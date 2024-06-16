@@ -27,13 +27,13 @@ export default function Home() {
   return (
     <main className="overflow-hidden">
       <OnboardingModal />
-      <div className="flex flex-col min-h-[85vh] lg:flex-row md:h-[85vh] px-4 gap-4 lg:justify-center lg:items-center">
-        <section className="h-[30vh] lg:h-full w-full">
+      <div className="flex flex-col min-h-[85vh] lg:flex-row lg:h-[85vh] px-4 gap-4 lg:justify-center lg:items-center">
+        <section className="lg:h-full w-full flex-1">
           <Preview />
         </section>
 
-        <section className="h-[30vh] lg:h-full w-full">
-          <Tabs defaultValue={tabs.options.name} className="flex-1">
+        <section className="lg:h-full w-[100%] lg:w-[50%] flex-1">
+          <Tabs defaultValue={tabs.options.name}>
             <TabsList className="flex">
               <TabsTrigger value={tabs.options.name} className="flex-1">
                 <BsGear size={CONSTANTS.IconSize} className="mr-2" />

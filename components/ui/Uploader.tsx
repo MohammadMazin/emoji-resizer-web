@@ -14,7 +14,7 @@ const Uploader = () => {
     multiple: true,
     onDrop: (acceptedFiles) => {
       const files = acceptedFiles.map((file: File) => {
-        return { data: file, blob: URL.createObjectURL(file) };
+        return { data: file, blob: URL.createObjectURL(file), selected: false };
       });
       addImage(files);
     },
@@ -37,7 +37,11 @@ const Uploader = () => {
               type: file.type,
               lastModified: file.lastModified,
             });
-            files.push({ data: newFile, blob: URL.createObjectURL(newFile) });
+            files.push({
+              data: newFile,
+              blob: URL.createObjectURL(newFile),
+              selected: false,
+            });
           }
         }
 

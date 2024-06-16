@@ -6,11 +6,13 @@ import ImagePreview from "../ui/ImagePreview";
 type TwitchChatProps = {
   darkMode?: boolean;
   defaultBadges?: any[];
+  selectMegaEmote: any;
 };
 
 const TwitchChat = ({
   darkMode = false,
   defaultBadges = [],
+  selectMegaEmote,
 }: TwitchChatProps) => {
   const { images } = useImageStore();
 
@@ -28,7 +30,6 @@ const TwitchChat = ({
           viewers, and it was giving them too much &quot;stream&quot; anxiety! -
           ChatGPT
         </p>
-        {/* <ImagePreview file={}/> */}
         <Image
           src="/noImage-1.png"
           alt="no uploaded image"
@@ -53,15 +54,13 @@ const TwitchChat = ({
             : "bg-twitch-chat-light hover:bg-twitch-chat-light-hover text-black"
         } flex-1 flex gap-1 p-2 items-center flex-wrap`}
       >
-        {images.map((file, index) => (
-          <>
+        {images
+          .filter((file) => file.selected)
+          .map((file, index) => (
             <ImagePreview key={index} file={file.blob} size={18} />
-          </>
-        ))}
+          ))}
         {defaultBadges.map((file, index) => (
-          <>
-            <ImagePreview key={index} file={file.link} size={18} />
-          </>
+          <ImagePreview key={index} file={file.link} size={18} />
         ))}
 
         <span className="text-sx font-semibold text-pink-400">
@@ -69,7 +68,12 @@ const TwitchChat = ({
         </span>
         {images.map((file, index) => (
           <>
-            <ImagePreview key={index} file={file.blob} size={28} />
+            <ImagePreview
+              key={index}
+              file={file.blob}
+              size={28}
+              onClick={() => selectMegaEmote(file.blob)}
+            />
           </>
         ))}
         <span className="text-sx">

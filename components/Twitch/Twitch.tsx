@@ -3,7 +3,6 @@ import useImageStore from "@/lib/store/imageStore";
 import Image from "next/image";
 import React from "react";
 import TwitchChat from "./TwitchChat";
-import ImagePreview from "../ui/ImagePreview";
 import { Button } from "../ui/button";
 import CONSTANTS from "@/lib/constanst";
 import {
@@ -12,19 +11,31 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "../ui/tooltip";
+import TwitchMegaEmote from "./TwitchMegaEmote";
 
 const Twitch = () => {
-  const { images } = useImageStore();
-  const [selectedBadges, setSelectedBadges] = useState(CONSTANTS.defaultBadges);
+  const { images, updateImageSelected } = useImageStore();
+  const [selectedDefaultBadges, setSelectedDefaultBadges] = useState(
+    CONSTANTS.defaultBadges
+  );
+  const [megaEmote, setMegaEmote] = useState<string | null>(null);
 
   function selectDefaultBadge(name: string) {
-    const newBadges = selectedBadges.map((badge) => {
+    const newBadges = selectedDefaultBadges.map((badge) => {
       if (badge.name === name) {
         return { ...badge, selected: !badge.selected };
       }
       return badge;
     });
-    setSelectedBadges(newBadges);
+    setSelectedDefaultBadges(newBadges);
+  }
+
+  function selectCustomBadge(blob: string) {
+    updateImageSelected(blob);
+  }
+
+  function handleMegaEmote(blob: string) {
+    setMegaEmote(blob);
   }
 
   if (images.length === 0) {
@@ -54,8 +65,27 @@ const Twitch = () => {
 
   return (
     <div className="flex flex-col">
-      <div className="flex gap-3 p-2 my-4 flex-wrap">
-        {selectedBadges.map((badge) => (
+      <div className="p-2 my-4 max-w-full overflow-x-auto whitespace-nowrap">
+        <h1 className="font-medium mb-1">Select Badges</h1>
+        {images.map((badge) => (
+          <Button
+            variant={badge.selected ? "selected" : "unselected"}
+            key={badge.blob}
+            onClick={() => selectCustomBadge(badge.blob)}
+            className={`hover:opacity-100 transition-opacity ${
+              badge.selected ? "opacity-100" : "opacity-50"
+            } mr-2 `}
+          >
+            <Image
+              height={18}
+              width={18}
+              src={badge.blob}
+              alt={`twitch Emote`}
+            />
+          </Button>
+        ))}
+
+        {selectedDefaultBadges.map((badge, index) => (
           <TooltipProvider key={badge.name}>
             <Tooltip>
               <TooltipTrigger>
@@ -65,7 +95,7 @@ const Twitch = () => {
                   onClick={() => selectDefaultBadge(badge.name)}
                   className={`hover:opacity-100 transition-opacity ${
                     badge.selected ? "opacity-100" : "opacity-50"
-                  }`}
+                  } ${index !== 0 && "ml-2"} `}
                 >
                   <Image
                     height={18}
@@ -82,12 +112,25 @@ const Twitch = () => {
           </TooltipProvider>
         ))}
       </div>
+
+      {/* TODO: better way to pass badges without filtering it 4 times? */}
       <TwitchChat
         darkMode={true}
-        defaultBadges={selectedBadges.filter((badge) => badge.selected)}
+        defaultBadges={selectedDefaultBadges.filter((badge) => badge.selected)}
+        selectMegaEmote={handleMegaEmote}
       />
       <TwitchChat
-        defaultBadges={selectedBadges.filter((badge) => badge.selected)}
+        defaultBadges={selectedDefaultBadges.filter((badge) => badge.selected)}
+        selectMegaEmote={handleMegaEmote}
+      />
+      <TwitchMegaEmote
+        darkMode
+        defaultBadges={selectedDefaultBadges.filter((badge) => badge.selected)}
+        megaEmote={megaEmote}
+      />
+      <TwitchMegaEmote
+        defaultBadges={selectedDefaultBadges.filter((badge) => badge.selected)}
+        megaEmote={megaEmote}
       />
     </div>
   );
