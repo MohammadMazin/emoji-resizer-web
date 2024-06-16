@@ -86,7 +86,6 @@ const Discord = () => {
           role={selectedRole}
           setSelectedRole={setSelectedRole}
         />
-        <div className="py-[7rem] lg:hidden">ss</div>
       </div>
     </div>
   );

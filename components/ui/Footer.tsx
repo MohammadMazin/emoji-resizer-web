@@ -30,6 +30,8 @@ const FeedbackModal = () => {
     navigator.clipboard
       .writeText("kayleberries")
       .then(() => toast.success("Copied Discord username to clipboard!"));
+
+    posthog.capture("discordUsername_clicked");
   }
 
   return (
@@ -59,6 +61,9 @@ const FeedbackModal = () => {
                   className="flex items-center w-full justify-center"
                   href="https://twitter.com/kayleberries"
                   target={"_blank"}
+                  onClick={() => {
+                    posthog.capture("twitter_clicked");
+                  }}
                 >
                   <Button
                     variant="outline"
@@ -82,6 +87,9 @@ const FeedbackModal = () => {
                   className="flex items-center w-full justify-center"
                   href="https://github.com/MohammadMazin/emoji-resizer-web"
                   target={"_blank"}
+                  onClick={() => {
+                    posthog.capture("github_clicked");
+                  }}
                 >
                   <Button variant="outline" className="w-full">
                     <BsGithub size={CONSTANTS.IconSize} className="mr-4" />{" "}
