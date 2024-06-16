@@ -64,55 +64,56 @@ const Twitch = () => {
   }
 
   return (
-    <div className="flex flex-col">
-      <div className="p-2 my-4 max-w-full overflow-x-auto whitespace-nowrap">
+    <div className="flex flex-col gap-2">
+      <div className="flex flex-col gap-1">
         <h1 className="font-medium mb-1">Select Badges</h1>
-        {images.map((badge) => (
-          <Button
-            variant={badge.selected ? "selected" : "unselected"}
-            key={badge.blob}
-            onClick={() => selectCustomBadge(badge.blob)}
-            className={`hover:opacity-100 transition-opacity ${
-              badge.selected ? "opacity-100" : "opacity-50"
-            } mr-2 `}
-          >
-            <Image
-              height={18}
-              width={18}
-              src={badge.blob}
-              alt={`twitch Emote`}
-            />
-          </Button>
-        ))}
+        <div className="p-2 max-w-full overflow-x-auto whitespace-nowrap">
+          {images.map((badge) => (
+            <Button
+              variant={badge.selected ? "selected" : "unselected"}
+              key={badge.blob}
+              onClick={() => selectCustomBadge(badge.blob)}
+              className={`hover:opacity-100 transition-opacity ${
+                badge.selected ? "opacity-100" : "opacity-50"
+              } mr-2 `}
+            >
+              <Image
+                height={18}
+                width={18}
+                src={badge.blob}
+                alt={`twitch Emote`}
+              />
+            </Button>
+          ))}
 
-        {selectedDefaultBadges.map((badge, index) => (
-          <TooltipProvider key={badge.name}>
-            <Tooltip>
-              <TooltipTrigger>
-                <Button
-                  variant={badge.selected ? "selected" : "unselected"}
-                  key={badge.name}
-                  onClick={() => selectDefaultBadge(badge.name)}
-                  className={`hover:opacity-100 transition-opacity ${
-                    badge.selected ? "opacity-100" : "opacity-50"
-                  } ${index !== 0 && "ml-2"} `}
-                >
-                  <Image
-                    height={18}
-                    width={18}
-                    src={badge.link}
-                    alt={`${badge.name} twitch badge`}
-                  />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>{badge.name}</p>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-        ))}
+          {selectedDefaultBadges.map((badge, index) => (
+            <TooltipProvider key={badge.name}>
+              <Tooltip>
+                <TooltipTrigger>
+                  <Button
+                    variant={badge.selected ? "selected" : "unselected"}
+                    key={badge.name}
+                    onClick={() => selectDefaultBadge(badge.name)}
+                    className={`hover:opacity-100 transition-opacity ${
+                      badge.selected ? "opacity-100" : "opacity-50"
+                    } ${index !== 0 && "ml-2"} `}
+                  >
+                    <Image
+                      height={18}
+                      width={18}
+                      src={badge.link}
+                      alt={`${badge.name} twitch badge`}
+                    />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>{badge.name}</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          ))}
+        </div>
       </div>
-
       {/* TODO: better way to pass badges without filtering it 4 times? */}
       <TwitchChat
         darkMode={true}

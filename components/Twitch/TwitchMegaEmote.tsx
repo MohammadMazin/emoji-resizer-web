@@ -32,15 +32,13 @@ const TwitchMegaEmote = ({
       flex flex-col`}
       >
         <div className={`flex-1 flex gap-1 p-2 items-center flex-wrap`}>
-          {images.map((file, index) => (
-            <>
+          {images
+            .filter((file) => file.selected)
+            .map((file, index) => (
               <ImagePreview key={index} file={file.blob} size={18} />
-            </>
-          ))}
+            ))}
           {defaultBadges.map((file, index) => (
-            <>
               <ImagePreview key={index} file={file.link} size={18} />
-            </>
           ))}
 
           <span className="text-sx font-semibold text-pink-400">

@@ -66,16 +66,18 @@ const TwitchChat = ({
         <span className="text-sx font-semibold text-pink-400">
           kayleberries:
         </span>
-        {images.map((file, index) => (
-          <>
-            <ImagePreview
-              key={index}
-              file={file.blob}
-              size={28}
-              onClick={() => selectMegaEmote(file.blob)}
-            />
-          </>
-        ))}
+        <div className="flex gap-[0.1rem]">
+          {images.map((file, index) => (
+            <>
+              <ImagePreview
+                key={index}
+                file={file.blob}
+                size={28}
+                onClick={() => selectMegaEmote(file.blob)}
+              />
+            </>
+          ))}
+        </div>
         <span className="text-sx">
           hi i love your stream, do you sell cakes?
         </span>
