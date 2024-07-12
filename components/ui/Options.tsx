@@ -1,3 +1,4 @@
+"use client";
 import pica from "pica";
 import { useState } from "react";
 import { Button } from "./button";

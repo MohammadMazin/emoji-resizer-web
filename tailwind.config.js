@@ -42,6 +42,13 @@ module.exports = {
                     "chat-light": "hsl(var(--twitch-chat-light))",
                     "chat-light-hover": "hsl(var(--twitch-chat-light-hover))",
                 },
+                youtube: {
+                    DEFAULT: "hsl(var(--youtube))",
+                    "chat-dark": "hsl(var(--youtube-chat-dark))",
+                    "chat-dark-hover": "hsl(var(--youtube-chat-dark-hover))",
+                    "chat-light": "hsl(var(--youtube-chat-light))",
+                    "chat-light-hover": "hsl(var(--youtube-chat-light-hover))",
+                },
                 discord: {
                     DEFAULT: "hsl(var(--discord))",
                     100: "hsl(235, 85%, 95%)",

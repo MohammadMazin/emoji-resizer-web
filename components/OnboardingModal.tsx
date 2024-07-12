@@ -1,3 +1,4 @@
+"use client";
 import { useEffect } from "react";
 import {
   Dialog,
@@ -12,7 +13,6 @@ import { Button } from "./ui/button";
 import { DialogClose } from "@radix-ui/react-dialog";
 import { Settings } from "@/lib/types";
 import Image from "next/image";
-import CONSTANTS from "@/lib/constanst";
 import onboardingImage from "@/public/onboarding.png";
 
 const OnboardingModal = () => {
@@ -27,10 +27,15 @@ const OnboardingModal = () => {
   }, []);
 
   function setHasOnboarded() {
-    let settings: any = localStorage.getItem("settings");
-    if (!settings) settings = { hasOnboarded: true };
-    else settings.hasOnboarded = true;
-    localStorage.setItem("settings", JSON.stringify(settings));
+    let settingsString: any = localStorage.getItem("settings");
+    if (!settingsString) {
+      const settings = { hasOnboarded: true };
+      localStorage.setItem("settings", JSON.stringify(settings));
+    } else {
+      const settingsParsed = JSON.parse(settingsString);
+      const settings = { ...settingsParsed, hasOnboarded: true };
+      localStorage.setItem("settings", JSON.stringify(settings));
+    }
   }
 
   return (
