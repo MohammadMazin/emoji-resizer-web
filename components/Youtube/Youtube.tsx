@@ -36,7 +36,8 @@ const Youtube = () => {
   }
 
   return (
-    <div className="overflow-y-scroll  max-h-[75vh]">
+    <div className="overflow-y-scroll  max-h-[75vh] flex flex-col gap-2">
+      <Info message="Preview of Badges will be added soon!" />
       <div className="rounded-xl">
         <YoutubeChat darkMode />
         <YoutubeChat />

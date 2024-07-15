@@ -60,11 +60,12 @@ const YoutubeChat = ({
         <span className="text-sx font-semibold text-gray-500">
           kayleberries
         </span>
-        {images
+        {/* TODO: add stuff for badges */}
+        {/* {images
           .filter((file) => file.selected)
           .map((file, index) => (
             <ImagePreview key={index} file={file.blob} size={16} />
-          ))}
+          ))} */}
         <div className="flex gap-[0.1rem]">
           {images.map((file, index) => (
             <>
