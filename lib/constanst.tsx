@@ -1,3 +1,8 @@
+import Discord from "@/components/Discord/Discord";
+import Twitch from "@/components/Twitch/Twitch";
+import Youtube from "@/components/Youtube/Youtube";
+import Options from "@/components/ui/Options";
+
 const CONSTANTS = {
   IconSize: 25,
   MaxImagesAllowed: 15,
@@ -95,6 +100,24 @@ const CONSTANTS = {
   ],
   colors: {
     secondary: "#f8b10d",
+  },
+  tabs: {
+    options: {
+      name: "options",
+      component: <Options />,
+    },
+    twitch: {
+      name: "twitch",
+      component: <Twitch />,
+    },
+    youtube: {
+      name: "youtube",
+      component: <Youtube />,
+    },
+    discord: {
+      name: "discord",
+      component: <Discord />,
+    },
   },
 };
 

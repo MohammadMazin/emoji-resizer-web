@@ -1,9 +1,9 @@
+"use client";
 import { useState } from "react";
 import useImageStore from "@/lib/store/imageStore";
 import Image from "next/image";
 import React from "react";
 import DiscordChat from "./DiscordChat";
-import ImagePreview from "../ui/ImagePreview";
 import Info from "../ui/Info";
 
 const Discord = () => {

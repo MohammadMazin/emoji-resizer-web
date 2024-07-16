@@ -42,6 +42,13 @@
     --twitch-chat-light-hover: 0 0% 95%;
     --twitch-text: 1rem;
 
+    --youtube: 0 100% 50%;
+    --youtube-chat-dark: 0 0% 6%;
+    --youtube-chat-dark-hover: 0 0% 15%;
+    --youtube-chat-light: 0 0% 100%;
+    --youtube-chat-light-hover: 0 0% 95%;
+    --youtube-text: 1rem;
+
     --discord: 235 70% 61%;
     --discord-chat-dark: 223 7% 21%;
     --discord-chat-dark-hover: 223 7% 19%;

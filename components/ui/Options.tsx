@@ -1,7 +1,15 @@
+"use client";
 import pica from "pica";
-import { useState } from "react";
+import { ReactElement, useState } from "react";
 import { Button } from "./button";
-import { BsCheckSquare, BsSquare, BsInfoCircle } from "react-icons/bs";
+import {
+  BsCheckSquare,
+  BsSquare,
+  BsInfoCircle,
+  BsDiscord,
+  BsTwitch,
+  BsYoutube,
+} from "react-icons/bs";
 import { AiOutlineDownload } from "react-icons/ai";
 import { ImSpinner2 } from "react-icons/im";
 import useImageStore from "@/lib/store/imageStore";
@@ -16,7 +24,6 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import CONSTANTS from "@/lib/constanst";
-import GIFOptions from "../GIFOptions";
 
 const Options = () => {
   const { types, updateSelectedTypes } = useEmoteTypeStore();
@@ -37,6 +44,7 @@ const Options = () => {
       selectedTypes.push({
         name: "Custom Size",
         label: "Custom Size",
+        folderName: "Custom Size",
         sizes: customSizeArray,
         selected: true,
       });
@@ -51,8 +59,8 @@ const Options = () => {
 
             if (format === "gif") {
               const reader = new FileReader();
-              const folder = zip.folder(type.name);
-              const filename = `${name}-${size}x${size}.${format}`;
+              const folder = zip.folder(type.folderName);
+              const filename = `${type.folderName}-${size}x${size}.${format}`;
 
               const blob = await getBlobFromURL(url.blob.toString());
 
@@ -94,15 +102,14 @@ const Options = () => {
               const resizedCanvas = await resizeImage(image, size);
               const resizedBlob = await canvasToBlob(resizedCanvas);
 
-              const folder = zip.folder(type.name);
-              const filename = `${name}-${size}x${size}.${format}`;
+              const folder = zip.folder(type.folderName);
+              const filename = `${type.folderName}-${size}x${size}.${format}`;
               folder!.file(filename, resizedBlob);
             }
           }
         }
       }
 
-      // Wait for all promises to resolve before generating and downloading the zip
       await Promise.all(promises);
       const content = await zip.generateAsync({ type: "blob" });
       const output = folderName ? folderName : "Emotes";
@@ -132,8 +139,8 @@ const Options = () => {
     canvas.height = size;
     const context = canvas.getContext("2d");
 
-    const p = pica(); // Create a new pica instance
-    await p.resize(image, canvas, { unsharpAmount: 80, unsharpRadius: 0.6 }); // Apply sharpening
+    const p = pica();
+    await p.resize(image, canvas, { unsharpAmount: 80, unsharpRadius: 0.6 });
 
     return canvas;
   }
@@ -144,9 +151,8 @@ const Options = () => {
         if (blob) {
           resolve(blob);
         } else {
-          // Handle the case where toBlob returns null
           console.error("canvas.toBlob returned null");
-          resolve(new Blob()); // Create an empty blob as a placeholder
+          resolve(new Blob());
         }
       }, "image/png");
     });
@@ -177,6 +183,15 @@ const Options = () => {
     return blob;
   }
 
+  function generateIcon(name: string): ReactElement | undefined {
+    if (name.includes("twitch")) return <BsTwitch className="mr-1" size={20} />;
+    else if (name.includes("discord"))
+      return <BsDiscord className="mr-1" size={20} />;
+    else if (name.includes("youtube"))
+      return <BsYoutube className="mr-1" size={20} />;
+    return undefined;
+  }
+
   return (
     <div className="flex-1 p-4 flex flex-col gap-4 ">
       <Input
@@ -201,6 +216,7 @@ const Options = () => {
                 handleBClick(label);
               }}
             >
+              {generateIcon(label)}
               {name}
               {selected ? (
                 <BsCheckSquare
@@ -216,7 +232,7 @@ const Options = () => {
         })}
       </div>
 
-      <div className="flex gap-4 items-center">
+      <div className="flex gap-4 items-end">
         <Input
           className="appearance-none bg-transparent border-x-0 border-t-0 focus:outline-none mt-4"
           type="text"
@@ -237,7 +253,7 @@ const Options = () => {
             </TooltipTrigger>
             <TooltipContent>
               <p>Enter sizes separated by comma</p>
-              <p>Ex: (120,40 will resize to 120x120 and 40x40)</p>
+              <p>Ex: (120,40 will create emotes of size 120x120 and 40x40)</p>
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>

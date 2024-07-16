@@ -43,7 +43,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={inter.className}>
+      <body className={`${inter.className}`}>
         <CSPostHogProvider>
           <Analytics />
           <Toaster />
@@ -52,7 +52,7 @@ export default function RootLayout({
             template='<div class="bar" role="bar"><div class="peg"></div></div>'
           />
           <Navbar />
-          <div className="max-w-screen-2xl ml-auto mr-auto">{children}</div>
+          <div className=" max-w-screen-2xl ml-auto mr-auto">{children}</div>
           <Footer />
         </CSPostHogProvider>
       </body>

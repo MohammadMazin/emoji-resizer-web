@@ -3,6 +3,7 @@ import { create } from "zustand";
 interface EmoteType {
   label: string;
   name: string;
+  folderName: string;
   sizes: number[];
   selected: boolean;
 }
@@ -16,26 +17,37 @@ type EmoteTypeState = {
 const typesArray = [
   {
     label: "twitchEmotes",
-    name: "Twitch Emotes",
+    name: "Emotes",
+    folderName: "Twitch Emotes",
     sizes: [28, 56, 112],
     selected: false,
   },
   {
     label: "twitchBadges",
-    name: "Twitch Badges",
+    name: "Badges",
+    folderName: "Twitch Badges",
     sizes: [18, 36, 72],
     selected: false,
   },
   {
     label: "discordEmotes",
-    name: "Discord Emotes",
+    name: "Emotes",
+    folderName: "Discord Emotes",
     sizes: [128],
     selected: false,
   },
   {
     label: "discordStickers",
-    name: "Discord Stickers",
+    name: "Stickers",
+    folderName: "Discord Stickers",
     sizes: [320],
+    selected: false,
+  },
+  {
+    label: "youtubeEmotesOrBadges",
+    name: "Emotes or Badges",
+    folderName: "Youtube Emotes or Badges",
+    sizes: [32],
     selected: false,
   },
 ];
