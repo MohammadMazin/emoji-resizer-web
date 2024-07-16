@@ -232,7 +232,7 @@ const Options = () => {
         })}
       </div>
 
-      <div className="flex gap-4 items-center">
+      <div className="flex gap-4 items-end">
         <Input
           className="appearance-none bg-transparent border-x-0 border-t-0 focus:outline-none mt-4"
           type="text"
