@@ -10,11 +10,9 @@ export default function PlatformTabs() {
     usePlatformStore();
 
   useEffect(() => {
-    // TODO: fix if no settings in local storage
     const settingsString = localStorage.getItem("settings");
     if (settingsString) {
       const settings = JSON.parse(settingsString);
-      console.log(platforms);
       if (settings.platform) {
         if (settings.platform.twitch) setSelectedPlatform("Twitch", true);
         else setSelectedPlatform("Twitch", false);
@@ -24,7 +22,7 @@ export default function PlatformTabs() {
 
         if (settings.platform.youtube) setSelectedPlatform("Youtube", true);
         else setSelectedPlatform("Youtube", false);
-      }
+      } else setAllPlatformsAsSelected();
     } else {
       setAllPlatformsAsSelected();
     }
