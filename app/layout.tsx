@@ -44,6 +44,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${inter.className}`}>
+        <script
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4394572709273945"
+          crossOrigin="anonymous"
+        ></script>
         <CSPostHogProvider>
           <Analytics />
           <Toaster />
