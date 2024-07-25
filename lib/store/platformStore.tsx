@@ -14,6 +14,10 @@ interface Platforms {
 // todo change name from updateSelectedPlatform to toggleSelectedPlatform
 type PlatformsState = {
   platforms: Platforms[];
+  usernameColor: string;
+  chatMessage: string;
+  setUsernameColor: (color: string) => void;
+  setChatMessage: (chatMessage: string) => void;
   updateSelectedPlatform: (name: string) => void;
   setAllPlatformsAsSelected: () => void;
   setSelectedPlatform: (name: string, value: boolean) => void;
@@ -42,6 +46,21 @@ const platforms = [
 
 const usePlatformStore = create<PlatformsState>((set) => ({
   platforms,
+  usernameColor: "#edb900",
+  chatMessage: "hi i love your stream, do you sell cakes?",
+  setChatMessage: (chatMessage: string) => {
+    set(() => ({
+      chatMessage:
+        chatMessage === ""
+          ? "do you sell cakes? I love your stream!"
+          : chatMessage,
+    }));
+  },
+  setUsernameColor: (usernameColor: string) => {
+    set(() => ({
+      usernameColor,
+    }));
+  },
   updateSelectedPlatform: (name: string) => {
     set((state) => ({
       platforms: state.platforms.map((platform) =>

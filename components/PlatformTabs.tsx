@@ -4,10 +4,17 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { BsGear } from "react-icons/bs";
 import CONSTANTS from "@/lib/constanst";
 import { useEffect } from "react";
+import { Input } from "./ui/input";
 
 export default function PlatformTabs() {
-  const { platforms, setSelectedPlatform, setAllPlatformsAsSelected } =
-    usePlatformStore();
+  const {
+    platforms,
+    usernameColor,
+    setUsernameColor,
+    setChatMessage,
+    setSelectedPlatform,
+    setAllPlatformsAsSelected,
+  } = usePlatformStore();
 
   useEffect(() => {
     const settingsString = localStorage.getItem("settings");
@@ -42,7 +49,10 @@ export default function PlatformTabs() {
   }
 
   return (
-    <Tabs defaultValue={CONSTANTS.tabs.options.name}>
+    <Tabs
+      defaultValue={CONSTANTS.tabs.options.name}
+      className="relative h-full flex flex-col"
+    >
       <TabsList className="flex">
         <TabsTrigger value={CONSTANTS.tabs.options.name} className="flex-1">
           <BsGear size={CONSTANTS.IconSize} className="mr-2" />
@@ -55,6 +65,7 @@ export default function PlatformTabs() {
               value={platform.name.toLowerCase()}
               key={platform.name}
               className={`flex-1 ${getBackgroundColor(platform.name)}`}
+              onClick={(e) => console.log(e.target)}
             >
               {platform.componentMini}
               <p className="hidden sm:block">{platform.name}</p>
@@ -73,6 +84,21 @@ export default function PlatformTabs() {
       <TabsContent value={CONSTANTS.tabs.discord.name}>
         {CONSTANTS.tabs.discord.component}
       </TabsContent>
+      <div className="w-full grid grid-cols-5 md:grid-cols-8 mt-auto items-center gap-2">
+        <p>Color</p>
+        <p className="col-span-4 md:col-span-7">Chat Message</p>
+        <Input
+          type="color"
+          className=""
+          value={usernameColor}
+          onChange={(e) => setUsernameColor(e.target.value)}
+        />
+        <Input
+          placeholder="hi i love your stream, do you sell cakes?"
+          onChange={(e) => setChatMessage(e.target.value)}
+          className="col-span-4 md:col-span-7"
+        />
+      </div>
     </Tabs>
   );
 }
