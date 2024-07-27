@@ -23,7 +23,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import CONSTANTS from "@/lib/constanst";
+import CONSTANTS from "@/lib/constants";
 
 const Options = () => {
   const { types, updateSelectedTypes } = useEmoteTypeStore();

@@ -40,11 +40,10 @@ const OnboardingModal = () => {
 
   return (
     <Dialog>
-      <DialogTrigger className="mt-auto">
-        <button id="onboarding-button" className="hidden m-0 p-0">
-          sss
-        </button>
-      </DialogTrigger>
+      <DialogTrigger
+        id="onboarding-button"
+        className="mt-auto hidden m-0 p-0"
+      ></DialogTrigger>
       <DialogContent>
         <DialogHeader>
           <DialogTitle className="mt-2 flex flex-col items-center">
@@ -52,7 +51,7 @@ const OnboardingModal = () => {
               Emote Resizer
             </h1>
             <h3 className="scroll-m-20 mt-2 text-2xl tracking-tight">
-              For Twitch and Discord!
+              For Twitch, Discord, YouTube!
             </h3>
             <Image
               src={onboardingImage}
@@ -66,9 +65,10 @@ const OnboardingModal = () => {
           <DialogDescription>
             <div className="flex flex-col items-center justify-center mt-4">
               <p>
-                A site where you can view how your emotes (JPG, PNG, GIF) will
-                appear on Twitch and Discord while also being able to resize
-                them to meet the requirement of each platform
+                A site where you can view how your emotes, badges, stickers
+                (JPG, PNG, GIF) will appear on Twitch, Discord and Youtube while
+                also being able to resize them to meet the requirement of each
+                platform
               </p>
             </div>
           </DialogDescription>

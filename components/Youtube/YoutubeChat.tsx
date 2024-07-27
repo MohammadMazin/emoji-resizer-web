@@ -2,6 +2,7 @@ import useImageStore from "@/lib/store/imageStore";
 import Image from "next/image";
 import React from "react";
 import ImagePreview from "../ui/ImagePreview";
+import usePlatformStore from "@/lib/store/platformStore";
 
 type YoutubeChatProps = {
   darkMode?: boolean;
@@ -13,6 +14,7 @@ const YoutubeChat = ({
   defaultBadges = [],
 }: YoutubeChatProps) => {
   const { images } = useImageStore();
+  const { chatMessage } = usePlatformStore();
 
   if (images.length === 0) {
     return (
@@ -50,7 +52,7 @@ const YoutubeChat = ({
           darkMode
             ? "bg-youtube-chat-dark hover:bg-youtube-chat-dark-hover"
             : "bg-youtube-chat-light hover:bg-youtube-chat-light-hover text-black"
-        } flex-1 flex gap-1 p-2 items-center flex-wrap`}
+        } flex-1 flex gap-1 p-2 items-center flex-wrap text-sx`}
       >
         {/* {defaultBadges.map((file, index) => (
           <ImagePreview key={index} file={file.link} size={18} />
@@ -73,9 +75,9 @@ const YoutubeChat = ({
             </>
           ))}
         </div>
-        <span className="text-sx">
-          hi i love your stream, do you sell cakes?
-        </span>
+        {chatMessage.split(" ").map((message, index) => (
+          <p key={index}>{message}</p>
+        ))}
       </div>
     </div>
   );

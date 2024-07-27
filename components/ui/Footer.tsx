@@ -13,7 +13,7 @@ import { Button } from "@/components/ui/button";
 import { IoAlertCircleOutline } from "react-icons/io5";
 import { toast } from "react-hot-toast";
 import posthog from "posthog-js";
-import CONSTANTS from "@/lib/constanst";
+import CONSTANTS from "@/lib/constants";
 import Image from "next/image";
 import coffee_yellow from "@/public/coffee-yellow.png";
 
@@ -35,19 +35,14 @@ const FeedbackModal = () => {
   }
 
   return (
-    <div className="max-w-screen-2xl flex justify-between items-center ml-auto mr-auto p-2">
+    <div className="max-w-screen-2xl flex  gap-4 justify-between items-center ml-auto mr-auto p-2">
       <Dialog>
         <DialogTrigger className="mt-auto">
           {" "}
-          <Button
-            variant={"link"}
-            onClick={() => {
-              posthog.capture("feedback_clicked");
-            }}
-          >
+          <div className="flex gap-2 text-yellow-500 items-center text-left ps-2 hover:text-yellow-600 transition-colors">
             Share your feedback{" "}
             <IoAlertCircleOutline size={CONSTANTS.IconSize} />
-          </Button>
+          </div>
         </DialogTrigger>
         <DialogContent>
           <DialogHeader>
@@ -57,22 +52,22 @@ const FeedbackModal = () => {
             </DialogTitle>
             <DialogDescription>
               <div className="flex flex-col justify-center items-center gap-4 mt-8">
-                <Link
-                  className="flex items-center w-full justify-center"
-                  href="https://twitter.com/kayleberries"
-                  target={"_blank"}
-                  onClick={() => {
-                    posthog.capture("twitter_clicked");
-                  }}
+                <Button
+                  variant="outline"
+                  className="border-twitter hover:bg-twitter/50 hover:text-foreground w-full"
                 >
-                  <Button
-                    variant="outline"
-                    className="border-twitter hover:bg-twitter/50 hover:text-foreground w-full"
+                  <Link
+                    className="flex items-center w-full justify-center"
+                    href="https://twitter.com/kayleberries"
+                    target={"_blank"}
+                    onClick={() => {
+                      posthog.capture("twitter_clicked");
+                    }}
                   >
                     <BsTwitter size={CONSTANTS.IconSize} className="mr-4" />{" "}
                     Twitter
-                  </Button>
-                </Link>
+                  </Link>
+                </Button>
 
                 <Button
                   variant="outline"
@@ -83,19 +78,19 @@ const FeedbackModal = () => {
                   Discord - kayleberries
                 </Button>
 
-                <Link
-                  className="flex items-center w-full justify-center"
-                  href="https://github.com/MohammadMazin/emoji-resizer-web"
-                  target={"_blank"}
-                  onClick={() => {
-                    posthog.capture("github_clicked");
-                  }}
-                >
-                  <Button variant="outline" className="w-full">
+                <Button variant="outline" className="w-full">
+                  <Link
+                    className="flex items-center w-full justify-center"
+                    href="https://github.com/MohammadMazin/emoji-resizer-web"
+                    target={"_blank"}
+                    onClick={() => {
+                      posthog.capture("github_clicked");
+                    }}
+                  >
                     <BsGithub size={CONSTANTS.IconSize} className="mr-4" />{" "}
                     Github
-                  </Button>
-                </Link>
+                  </Link>
+                </Button>
               </div>
             </DialogDescription>
           </DialogHeader>

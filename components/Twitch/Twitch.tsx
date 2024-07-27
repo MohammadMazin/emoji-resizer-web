@@ -5,7 +5,7 @@ import Image from "next/image";
 import React from "react";
 import TwitchChat from "./TwitchChat";
 import { Button } from "../ui/button";
-import CONSTANTS from "@/lib/constanst";
+import CONSTANTS from "@/lib/constants";
 import {
   Tooltip,
   TooltipContent,
@@ -65,7 +65,7 @@ const Twitch = () => {
   }
 
   return (
-    <div className="flex flex-col gap-2">
+    <div className="flex flex-col gap-2 overflow-y-scroll  max-h-[70vh]">
       <div className="flex flex-col gap-1">
         <h1 className="font-medium mb-1">Select Badges</h1>
         <div className="p-2 max-w-full overflow-x-auto whitespace-nowrap">

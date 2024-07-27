@@ -7,11 +7,11 @@ export default function Home() {
     <main className="overflow-hidden">
       <OnboardingModal />
       <div className="flex flex-col min-h-[85vh] lg:flex-row lg:h-[85vh] px-4 gap-4 lg:justify-center lg:items-center">
-        <section className="lg:h-full w-full flex-1">
+        <section className="lg:h-full w-full lg:flex-1">
           <Preview />
         </section>
 
-        <section className="lg:h-full w-[100%] lg:w-[50%] flex-1">
+        <section className="lg:h-full w-[100%] lg:w-[50%] lg:flex-1">
           <PlatformTabs />
         </section>
       </div>

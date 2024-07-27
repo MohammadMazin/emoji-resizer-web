@@ -4,7 +4,7 @@ import { FiUpload, FiPlus } from "react-icons/fi";
 import { Accept, useDropzone } from "react-dropzone";
 import useImageStore from "@/lib/store/imageStore";
 import ImagePreview from "./ImagePreview";
-import CONSTANTS from "@/lib/constanst";
+import CONSTANTS from "@/lib/constants";
 
 const Uploader = () => {
   const { images, addImage } = useImageStore();

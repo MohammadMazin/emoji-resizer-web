@@ -6,7 +6,7 @@ import { Toaster } from "react-hot-toast";
 import { Analytics } from "@vercel/analytics/react";
 import Footer from "@/components/ui/Footer";
 import NextTopLoader from "nextjs-toploader";
-import CONSTANTS from "@/lib/constanst";
+import CONSTANTS from "@/lib/constants";
 import { CSPostHogProvider } from "./providers";
 
 const inter = Inter({ subsets: ["latin"] });

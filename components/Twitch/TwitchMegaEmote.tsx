@@ -1,7 +1,7 @@
 import useImageStore from "@/lib/store/imageStore";
-import Image from "next/image";
 import React from "react";
 import ImagePreview from "../ui/ImagePreview";
+import usePlatformStore from "@/lib/store/platformStore";
 
 type TwitchMegaEmoteProps = {
   darkMode?: boolean;
@@ -15,6 +15,7 @@ const TwitchMegaEmote = ({
   megaEmote,
 }: TwitchMegaEmoteProps) => {
   const { images } = useImageStore();
+  const { chatMessage, usernameColor } = usePlatformStore();
 
   return (
     <div
@@ -29,7 +30,7 @@ const TwitchMegaEmote = ({
           ? "bg-twitch-chat-dark hover:bg-twitch-chat-dark-hover"
           : "bg-twitch-chat-light hover:bg-twitch-chat-light-hover text-black"
       } 
-      flex flex-col`}
+      flex flex-col text-sx`}
       >
         <div className={`flex-1 flex gap-1 p-2 items-center flex-wrap`}>
           {images
@@ -38,15 +39,18 @@ const TwitchMegaEmote = ({
               <ImagePreview key={index} file={file.blob} size={18} />
             ))}
           {defaultBadges.map((file, index) => (
-              <ImagePreview key={index} file={file.link} size={18} />
+            <ImagePreview key={index} file={file.link} size={18} />
           ))}
 
-          <span className="text-sx font-semibold text-pink-400">
+          <span
+            className="text-sx font-semibold text-pink-400"
+            style={{ color: usernameColor }}
+          >
             kayleberries:
           </span>
-          <span className="text-sx">
-            hi i love your stream, do you sell cakes?
-          </span>
+          {chatMessage.split(" ").map((message, index) => (
+            <span key={index}>{message}</span>
+          ))}
         </div>
         {megaEmote ? (
           <ImagePreview file={megaEmote} size={112} />

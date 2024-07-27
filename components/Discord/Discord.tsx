@@ -10,8 +10,6 @@ const Discord = () => {
   const { images } = useImageStore();
   const [selectedRole, setSelectedRole] = useState(null);
 
-  console.log(selectedRole);
-
   if (images.length === 0) {
     return (
       <section className="h-full flex flex-col items-center p-8 text-center">
@@ -37,7 +35,7 @@ const Discord = () => {
   }
 
   return (
-    <div className="overflow-y-scroll  max-h-[75vh]">
+    <div className="overflow-y-scroll  max-h-[70vh]">
       <Info message="Click on an emote to see how it looks as a role next to the username!" />
       <div className="rounded-xl">
         <DiscordChat
