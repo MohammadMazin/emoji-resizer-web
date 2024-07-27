@@ -2,7 +2,7 @@
 import usePlatformStore from "@/lib/store/platformStore";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { BsGear } from "react-icons/bs";
-import CONSTANTS from "@/lib/constanst";
+import CONSTANTS from "@/lib/constants";
 import { useEffect } from "react";
 import { Input } from "./ui/input";
 

@@ -1,7 +1,7 @@
 import { ReactNode } from "react";
 import { BsDiscord, BsTwitch, BsYoutube } from "react-icons/bs";
 import { create } from "zustand";
-import CONSTANTS from "../constanst";
+import CONSTANTS from "../constants";
 
 interface Platforms {
   name: string;

@@ -5,14 +5,11 @@ import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 import { useState } from "react";
 import useImageStore from "@/lib/store/imageStore";
-import { arrayBuffer } from "stream/consumers";
-import { Checkbox } from "@/components/ui/checkbox";
 import Image from "next/image";
 import Info from "@/components/ui/Info";
-import { Metadata } from "next";
 
 export default function CreateGif() {
-  const { images, removeAllImages } = useImageStore();
+  const { images } = useImageStore();
   const [imgData, setImgData] = useState("");
   const [quality, setQuality] = useState(10);
   const [delay, setDelay] = useState(500);

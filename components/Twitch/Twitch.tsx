@@ -5,7 +5,7 @@ import Image from "next/image";
 import React from "react";
 import TwitchChat from "./TwitchChat";
 import { Button } from "../ui/button";
-import CONSTANTS from "@/lib/constanst";
+import CONSTANTS from "@/lib/constants";
 import {
   Tooltip,
   TooltipContent,

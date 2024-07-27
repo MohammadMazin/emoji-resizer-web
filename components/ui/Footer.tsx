@@ -13,7 +13,7 @@ import { Button } from "@/components/ui/button";
 import { IoAlertCircleOutline } from "react-icons/io5";
 import { toast } from "react-hot-toast";
 import posthog from "posthog-js";
-import CONSTANTS from "@/lib/constanst";
+import CONSTANTS from "@/lib/constants";
 import Image from "next/image";
 import coffee_yellow from "@/public/coffee-yellow.png";
 
