@@ -60,7 +60,7 @@ const Options = () => {
             if (format === "gif") {
               const reader = new FileReader();
               const folder = zip.folder(type.folderName);
-              const filename = `${type.folderName}-${size}x${size}.${format}`;
+              const filename = `${type.folderName}-${name}-${size}x${size}.${format}`;
 
               const blob = await getBlobFromURL(url.blob.toString());
 
@@ -103,7 +103,7 @@ const Options = () => {
               const resizedBlob = await canvasToBlob(resizedCanvas);
 
               const folder = zip.folder(type.folderName);
-              const filename = `${type.folderName}-${size}x${size}.${format}`;
+              const filename = `${type.folderName}-${name}-${size}x${size}.${format}`;
               folder!.file(filename, resizedBlob);
             }
           }
