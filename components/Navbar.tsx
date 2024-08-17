@@ -29,8 +29,8 @@ export const links = [
     title: "Emotes",
     link: "/",
   },
-  {
-    title: "Create GIF",
-    link: "/create-gif",
-  },
+  // {
+  //   title: "Create GIF",
+  //   link: "/create-gif",
+  // },
 ];
