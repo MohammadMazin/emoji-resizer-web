@@ -88,7 +88,7 @@ export default function CreateGif() {
         </section>
 
         <section className="h-[30vh] lg:h-full w-full flex flex-col justify-start gap-8">
-          <Info message="BETA: I'm still testing this out, I'd love any feedback you have on performance or improvements" />
+          {/* <Info message="BETA: I'm still testing this out, I'd love any feedback you have on performance or improvements" /> */}
 
           <div className="flex gap-2 w-50 items-center">
             Size:
