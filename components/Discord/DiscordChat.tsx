@@ -2,6 +2,7 @@ import useImageStore from "@/lib/store/imageStore";
 import Image from "next/image";
 import React from "react";
 import ImagePreview from "../ui/ImagePreview";
+import usePlatformStore from "@/lib/store/platformStore";
 
 type DiscordChatProps = {
   darkMode?: boolean;
@@ -19,6 +20,7 @@ const DiscordChat = ({
   isReply = false,
 }: DiscordChatProps) => {
   const { images } = useImageStore();
+  const { usernameColor, chatMessage } = usePlatformStore();
   const imageSize = setImageSize();
 
   function setImageSize() {
@@ -93,10 +95,13 @@ const DiscordChat = ({
             }}
           ></span>
           <ProfilePicture width={16} height={16} />
-          <span className="font-medium opacity-70 text-twitch">
+          <span
+            className="font-medium opacity-70"
+            style={{ color: usernameColor }}
+          >
             @Kayleberries
           </span>
-          <span className=" text-sx">this is a reply</span>
+          <span className=" text-sx">This is a reply</span>
           {images.map((file, index) => (
             <ImagePreview
               key={index}
@@ -112,7 +117,10 @@ const DiscordChat = ({
         <ProfilePicture />
         <section className="flex flex-col  h-max">
           <div className="flex gap-2 items-center">
-            <span className={`text-sm font-medium flex gap-1 text-twitch`}>
+            <span
+              className={`text-sm font-medium flex gap-1`}
+              style={{ color: usernameColor }}
+            >
               Kayleberries
               {role === null ? (
                 <svg
@@ -155,11 +163,12 @@ const DiscordChat = ({
                 onClick={() => setSelectedRole(file.blob)}
               />
             ))}
-            {messageType === "small" && (
-              <p className={`${!darkMode && "text-black"}`}>
-                Hi! Do you want to learn about our lord and saviour cheese?
-              </p>
-            )}
+            {messageType === "small" &&
+              chatMessage.split(" ").map((message, index) => (
+                <p className={`${!darkMode && "text-black"}`} key={index}>
+                  {message}
+                </p>
+              ))}
           </div>
           {messageType === "simple" && (
             <div

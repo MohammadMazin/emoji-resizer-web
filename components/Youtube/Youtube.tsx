@@ -4,12 +4,10 @@ import useImageStore from "@/lib/store/imageStore";
 import Image from "next/image";
 import React from "react";
 import YoutubeChat from "./YoutubeChat";
-import ImagePreview from "../ui/ImagePreview";
 import Info from "../ui/Info";
 
 const Youtube = () => {
   const { images } = useImageStore();
-  const [selectedRole, setSelectedRole] = useState(null);
 
   if (images.length === 0) {
     return (

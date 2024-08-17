@@ -2,6 +2,7 @@ import useImageStore from "@/lib/store/imageStore";
 import Image from "next/image";
 import React from "react";
 import ImagePreview from "../ui/ImagePreview";
+import usePlatformStore from "@/lib/store/platformStore";
 
 type TwitchChatProps = {
   darkMode?: boolean;
@@ -15,6 +16,7 @@ const TwitchChat = ({
   selectMegaEmote,
 }: TwitchChatProps) => {
   const { images } = useImageStore();
+  const { chatMessage, usernameColor } = usePlatformStore();
 
   if (images.length === 0) {
     return (
@@ -52,7 +54,7 @@ const TwitchChat = ({
           darkMode
             ? "bg-twitch-chat-dark hover:bg-twitch-chat-dark-hover"
             : "bg-twitch-chat-light hover:bg-twitch-chat-light-hover text-black"
-        } flex-1 flex gap-1 p-2 items-center flex-wrap`}
+        } flex-1 flex gap-1 p-2 items-center flex-wrap text-sx`}
       >
         {images
           .filter((file) => file.selected)
@@ -63,7 +65,10 @@ const TwitchChat = ({
           <ImagePreview key={index} file={file.link} size={18} />
         ))}
 
-        <span className="text-sx font-semibold text-pink-400">
+        <span
+          className="text-sx font-semibold"
+          style={{ color: usernameColor }}
+        >
           kayleberries:
         </span>
         <div className="flex gap-[0.1rem]">
@@ -78,9 +83,9 @@ const TwitchChat = ({
             </>
           ))}
         </div>
-        <span className="text-sx">
-          hi i love your stream, do you sell cakes?
-        </span>
+        {chatMessage.split(" ").map((message, index) => (
+          <span key={index}>{message}</span>
+        ))}
       </div>
     </div>
   );
