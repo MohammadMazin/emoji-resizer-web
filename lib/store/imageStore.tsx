@@ -4,6 +4,7 @@ export type ImageData = {
   data: File;
   blob: string;
   selected: boolean;
+  error: boolean;
 };
 
 type ImageHolderState = {

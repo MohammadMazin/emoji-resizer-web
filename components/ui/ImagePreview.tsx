@@ -7,6 +7,7 @@ type ImagePreviewProps = {
   onClick?: any;
   size: number;
   removeIcon?: boolean;
+  error?: boolean;
 };
 
 const ImagePreview = ({
@@ -14,9 +15,9 @@ const ImagePreview = ({
   size,
   onClick,
   removeIcon = false,
+  error = false,
 }: ImagePreviewProps) => {
   const { removeImage } = useImageStore();
-
   const handleClick = (event: any, file: any) => {
     event.stopPropagation();
     removeImage(file);
@@ -33,7 +34,7 @@ const ImagePreview = ({
         </div>
       )}
       <Image
-        className="file"
+        className={`${error && "border-4 border-red-600 rounded-md"}`}
         alt="emote"
         src={file}
         width={size}
