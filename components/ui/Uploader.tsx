@@ -5,31 +5,56 @@ import { Accept, useDropzone } from "react-dropzone";
 import useImageStore from "@/lib/store/imageStore";
 import ImagePreview from "./ImagePreview";
 import CONSTANTS from "@/lib/constants";
+import { toast } from "react-hot-toast";
 
 const Uploader = () => {
   const { images, addImage } = useImageStore();
 
+  const validateSize = (blob: string, file: File): Promise<boolean> => {
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      img.src = blob;
+      img.onload = () => {
+        if (img.width !== img.height) {
+          toast.error(
+            `Image '${file.name}' is not a square. The size is ${img.width}x${img.height}`
+          );
+          resolve(true); // Image is not a square
+        } else {
+          resolve(false); // Image is a square
+        }
+      };
+      img.onerror = () => {
+        reject(new Error("Failed to load image"));
+      };
+    });
+  };
+
   const { getRootProps, getInputProps } = useDropzone({
     accept: "image/*" as unknown as Accept,
     multiple: true,
-    onDrop: (acceptedFiles) => {
-      const files = acceptedFiles.map((file: File) => {
-        return { data: file, blob: URL.createObjectURL(file), selected: false };
-      });
+    onDrop: async (acceptedFiles) => {
+      const files = await Promise.all(
+        acceptedFiles.map(async (file: File) => {
+          const blob = URL.createObjectURL(file);
+          const error = await validateSize(blob, file);
+          return { data: file, blob: blob, selected: false, error };
+        })
+      );
       addImage(files);
     },
   });
 
   useEffect(() => {
-    const handlePaste = (event: any) => {
+    const handlePaste = async (event: ClipboardEvent) => {
       if (event.clipboardData) {
         const items = event.clipboardData.items;
         const files = [];
-        console.log(items);
 
         for (let i = 0; i < items.length; i++) {
           if (items[i].kind === "file" && items[i].type.includes("image/")) {
             const file = items[i].getAsFile();
+            if (!file) return;
             const defaultFileName = `image-${Date.now()}.${
               file.type.split("/")[1]
             }`;
@@ -37,10 +62,14 @@ const Uploader = () => {
               type: file.type,
               lastModified: file.lastModified,
             });
+            const blob = URL.createObjectURL(newFile);
+            const error = await validateSize(blob, file);
+
             files.push({
               data: newFile,
               blob: URL.createObjectURL(newFile),
               selected: false,
+              error,
             });
           }
         }
@@ -74,6 +103,7 @@ const Uploader = () => {
                   file={file.blob}
                   size={125}
                   removeIcon={true}
+                  error={file.error}
                 />
               </>
             ))}
