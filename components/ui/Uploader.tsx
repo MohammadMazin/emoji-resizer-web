@@ -91,11 +91,11 @@ const Uploader = () => {
     <div className="h-full flex-1 flex flex-col p-4 border-2 border-gray-400 border-dashed rounded-xl overflow-y-scroll cursor-pointer hover:text-gray-400">
       <div
         {...getRootProps()}
-        className="flex flex-col justify-center items-center h-full gap-2"
+        className="flex flex-col justify-start h-full gap-2"
       >
         <input {...getInputProps()} />
         {images.length > 0 ? (
-          <div className="flex gap-8 flex-wrap p-8 justify-center">
+          <div className="flex gap-8 flex-wrap p-8 justify-start items-start">
             {images.map((file, index) => (
               <>
                 <ImagePreview
