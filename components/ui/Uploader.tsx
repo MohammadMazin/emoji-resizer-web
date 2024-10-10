@@ -85,7 +85,7 @@ const Uploader = () => {
     return () => {
       window.removeEventListener("paste", handlePaste);
     };
-  }, []);
+  }, [addImage]);
 
   return (
     <div className="h-full flex-1 flex flex-col p-4 border-2 border-gray-400 border-dashed rounded-xl overflow-y-scroll cursor-pointer hover:text-gray-400">
