@@ -204,7 +204,7 @@ const Options = () => {
         }}
       />
 
-      <div className="mt-8 grid grid-cols-2 gap-4">
+      <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-4 ">
         {types.map((type) => {
           const { label, name, selected } = type;
           return (
