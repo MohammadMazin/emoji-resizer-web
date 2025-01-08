@@ -49,55 +49,57 @@ const Options = () => {
         selected: true,
       });
     }
-
+    console.log(selectedTypes, images);
     try {
       const promises = [];
       for (const type of selectedTypes) {
-        for (const size of type.sizes) {
-          for (const url of images) {
-            const [name, format] = url.data.name.split(".");
+        for (const url of images) {
+          const [name, format] = url.data.name.split(".");
 
-            if (format === "gif") {
-              const reader = new FileReader();
-              const folder = zip.folder(type.folderName);
-              const filename = `${type.folderName}-${name}-${size}x${size}.${format}`;
+          if (format === "gif") {
+            const reader = new FileReader();
+            const folder = zip.folder(type.folderName);
 
-              const blob = await getBlobFromURL(url.blob.toString());
+            const blob = await getBlobFromURL(url.blob.toString());
 
-              const promise = new Promise<void>((resolve, reject) => {
-                reader.onload = async function (event) {
-                  try {
-                    const readerData = event.target!.result;
-                    const base64String = arrayBufferToBase64(readerData);
+            const promise = new Promise<void>((resolve, reject) => {
+              reader.onload = async function (event) {
+                try {
+                  const readerData = event.target!.result;
+                  const base64String = arrayBufferToBase64(readerData);
 
-                    const resizedGif = await fetch("api/", {
-                      method: "POST",
-                      headers: {
-                        "Content-Type": "application/json",
-                      },
-                      body: JSON.stringify({ base64String, size }),
-                    });
+                  const resizedGif = await fetch("api/", {
+                    method: "POST",
+                    headers: {
+                      "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({ base64String, size: type.sizes }),
+                  });
+                  const data = await resizedGif.json();
 
-                    const data = await resizedGif.json();
-
+                  data.resizedGifs.forEach((resizedGif: any) => {
                     const blobOutput = new Blob(
-                      [new Uint8Array(data.resizedGif.data)],
+                      [new Uint8Array(resizedGif.gif.data)],
                       {
                         type: "image/gif",
                       }
                     );
-                    folder!.file(filename, blobOutput);
-                    resolve(); // Resolve the promise once the blob is added
-                  } catch (error) {
-                    console.log("error ", error);
-                    reject(error); // Reject the promise in case of an error
-                  }
-                };
-              });
+                    const filename = `${type.folderName}-${name}-${resizedGif.size}x${resizedGif.size}.${format}`;
 
-              reader.readAsArrayBuffer(blob);
-              promises.push(promise);
-            } else {
+                    folder!.file(filename, blobOutput);
+                  });
+                  resolve(); // Resolve the promise once the blob is added
+                } catch (error) {
+                  console.log("error ", error);
+                  reject(error); // Reject the promise in case of an error
+                }
+              };
+            });
+
+            reader.readAsArrayBuffer(blob);
+            promises.push(promise);
+          } else {
+            for (const size of type.sizes) {
               const image = await loadImage(url.blob.toString());
               const resizedCanvas = await resizeImage(image, size);
               const resizedBlob = await canvasToBlob(resizedCanvas);

@@ -1,20 +1,29 @@
 import { NextRequest, NextResponse } from "next/server";
-import sharp from 'sharp';
+import sharp from "sharp";
 
 export async function GET() {
   return NextResponse.json({ data: "yeet" });
 }
 
-export async function POST(req: NextRequest, res:NextResponse) {
+export async function POST(req: NextRequest, res: NextResponse) {
   try {
-
     const body = await req.json();
-    if(!body.base64String || !body.size) throw new Error('Missing required fields');
-    const binaryData = Buffer.from(body.base64String, 'base64');
+    if (!body.base64String || !body.sizes)
+      throw new Error("Missing required fields");
 
-    const resizedGif = await sharp(binaryData,{animated:true})
-      .resize({ width: body.size }) // Example resizing
-      .toBuffer();
+    const binaryData = Buffer.from(body.base64String, "base64");
+
+    const resizedGifs = body.sizes.map(async (size: number) => {
+      await sharp(binaryData, { animated: true })
+        .resize({ width: size })
+        .toBuffer();
+    });
+
+    const resizedGifsWithSize = resizedGifs.map(
+      (gif: Buffer, index: number) => {
+        return { size: body.sizes[index], gif };
+      }
+    );
 
     // const optimizedGif = await imagemin.buffer(resizedGif, {
     //   plugins: [
@@ -25,22 +34,17 @@ export async function POST(req: NextRequest, res:NextResponse) {
     //   ],
     // });
     return NextResponse.json(
-      { resizedGif },
+      { resizedGifs: resizedGifsWithSize },
       { status: 200 }
     );
   } catch (error) {
-    console.log(error)
+    console.log(error);
     return NextResponse.json(
-      { message: "Failed to resize gif", error },
+      { message: `Failed to resize gif: ${JSON.stringify(error)}` },
       { status: 404 }
-    )
+    );
   }
 }
-
-
-
-
-
 
 // export async function POST(req: NextRequest) {
 //   try {
@@ -67,6 +71,6 @@ export async function POST(req: NextRequest, res:NextResponse) {
 //   } catch (error) {
 //     NextResponse.status(500).send('Error processing GIF');
 //   }
- 
+
 //   return NextResponse.json('')
 // }
