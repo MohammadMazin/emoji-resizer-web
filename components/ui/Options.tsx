@@ -73,7 +73,7 @@ const Options = () => {
                     headers: {
                       "Content-Type": "application/json",
                     },
-                    body: JSON.stringify({ base64String, size: type.sizes }),
+                    body: JSON.stringify({ base64String, sizes: type.sizes }),
                   });
                   const data = await resizedGif.json();
 
