@@ -6,6 +6,7 @@ export async function GET() {
 }
 
 export async function POST(req: NextRequest, res: NextResponse) {
+  console.log('first')
   try {
     const body = await req.json();
     if (!body.base64String || !body.sizes)
@@ -13,17 +14,21 @@ export async function POST(req: NextRequest, res: NextResponse) {
 
     const binaryData = Buffer.from(body.base64String, "base64");
 
-    const resizedGifs = body.sizes.map(async (size: number) => {
-      await sharp(binaryData, { animated: true })
+    const resizedGifs = await Promise.all(body.sizes.map(async (size: number) => {
+     return await sharp(binaryData, { animated: true })
         .resize({ width: size })
         .toBuffer();
-    });
+    }));
 
     const resizedGifsWithSize = resizedGifs.map(
       (gif: Buffer, index: number) => {
         return { size: body.sizes[index], gif };
       }
     );
+
+    console.log(
+      { resizedGifs: resizedGifsWithSize },
+    )
 
     // const optimizedGif = await imagemin.buffer(resizedGif, {
     //   plugins: [
