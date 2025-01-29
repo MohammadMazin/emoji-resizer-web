@@ -13,7 +13,7 @@ import {
 import { AiOutlineDownload } from "react-icons/ai";
 import { ImSpinner2 } from "react-icons/im";
 import useImageStore from "@/lib/store/imageStore";
-import useEmoteTypeStore from "@/lib/store/emoteTypeStore";
+import useEmoteTypeStore, { EmoteType } from "@/lib/store/emoteTypeStore";
 import JSZip from "jszip";
 import { saveAs } from "file-saver";
 import { Input } from "./input";
@@ -24,6 +24,12 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import CONSTANTS from "@/lib/constants";
+
+function getUniqueSizes(selectedTypes: EmoteType[]): number[] {
+  const allSizes = selectedTypes.flatMap((obj) => obj.sizes);
+  const uniqueSizes = new Set(allSizes);
+  return Array.from(uniqueSizes);
+}
 
 const Options = () => {
   const { types, updateSelectedTypes } = useEmoteTypeStore();
@@ -49,56 +55,58 @@ const Options = () => {
         selected: true,
       });
     }
-    console.log(selectedTypes, images);
     try {
       const promises = [];
-      for (const type of selectedTypes) {
-        for (const url of images) {
-          const [name, format] = url.data.name.split(".");
+      const uniqueSizes = getUniqueSizes(selectedTypes);
+      for (const url of images) {
+        const [name, format] = url.data.name.split(".");
+        if (format === "gif") {
+          const reader = new FileReader();
+          const blob = await getBlobFromURL(url.blob.toString());
 
-          if (format === "gif") {
-            const reader = new FileReader();
-            const folder = zip.folder(type.folderName);
+          const promise = new Promise<void>((resolve, reject) => {
+            reader.onload = async function (event) {
+              try {
+                const readerData = event.target!.result;
+                const base64String = arrayBufferToBase64(readerData);
 
-            const blob = await getBlobFromURL(url.blob.toString());
+                // get all the unique sizes from selectedTypes
 
-            const promise = new Promise<void>((resolve, reject) => {
-              reader.onload = async function (event) {
-                try {
-                  const readerData = event.target!.result;
-                  const base64String = arrayBufferToBase64(readerData);
-
-                  const resizedGif = await fetch("api/", {
-                    method: "POST",
-                    headers: {
-                      "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({ base64String, sizes: type.sizes }),
-                  });
-                  const data = await resizedGif.json();
-
-                  data.resizedGifs.forEach((resizedGif: any) => {
+                const resizedGif = await fetch("api/", {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json",
+                  },
+                  body: JSON.stringify({ base64String, sizes: uniqueSizes }),
+                });
+                const data = await resizedGif.json();
+                // add a loop `for (const type of selectedTypes)`  that adds all the gifs into a folder
+                // make sure folder content is not overridden when
+                for (const type of selectedTypes) {
+                  for (const size of type.sizes) {
+                    const folder = zip.folder(type.folderName);
                     const blobOutput = new Blob(
-                      [new Uint8Array(resizedGif.gif.data)],
+                      [new Uint8Array(data.resizedGifs[size].data)],
                       {
                         type: "image/gif",
                       }
                     );
-                    const filename = `${type.folderName}-${name}-${resizedGif.size}x${resizedGif.size}.${format}`;
-
+                    const filename = `${type.folderName}-${name}-${size}x${size}.${format}`;
                     folder!.file(filename, blobOutput);
-                  });
-                  resolve(); // Resolve the promise once the blob is added
-                } catch (error) {
-                  console.log("error ", error);
-                  reject(error); // Reject the promise in case of an error
+                  }
                 }
-              };
-            });
+                resolve();
+              } catch (error) {
+                console.log("error ", error);
+                reject(error);
+              }
+            };
+          });
 
-            reader.readAsArrayBuffer(blob);
-            promises.push(promise);
-          } else {
+          reader.readAsArrayBuffer(blob);
+          promises.push(promise);
+        } else {
+          for (const type of selectedTypes) {
             for (const size of type.sizes) {
               const image = await loadImage(url.blob.toString());
               const resizedCanvas = await resizeImage(image, size);
