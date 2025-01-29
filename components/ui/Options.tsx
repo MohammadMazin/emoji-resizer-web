@@ -24,6 +24,16 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import CONSTANTS from "@/lib/constants";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "./dialog";
+import { DialogClose } from "@radix-ui/react-dialog";
 
 const Options = () => {
   const { types, updateSelectedTypes } = useEmoteTypeStore();
@@ -281,16 +291,60 @@ const Options = () => {
           </>
         )}
       </Button>
-      <Button
-        radius={"none"}
+
+      <ConfirmActionButtonWithModal
         disabled={images.length === 0 || loading}
-        onClick={removeAllImages}
-        variant="destructive"
-      >
-        Clear All Emotes
-      </Button>
+        onConfirm={removeAllImages}
+      />
     </div>
   );
 };
 
 export default Options;
+
+// -------------------------
+
+type ConfirmActionButtonWithModalType = {
+  disabled: boolean;
+  onConfirm: () => void;
+};
+
+const ConfirmActionButtonWithModal = ({
+  disabled,
+  onConfirm,
+}: ConfirmActionButtonWithModalType) => {
+  return (
+    <Dialog>
+      <DialogTrigger asChild>
+        <Button
+          radius={"none"}
+          id="clear-all-emotes"
+          disabled={disabled}
+          // onClick={removeAllImages}
+          variant="destructive"
+        >
+          Clear All Emotes
+        </Button>
+      </DialogTrigger>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle className="mt-2 flex flex-col items-center">
+            <h3 className="scroll-m-20 mt-2 text-2xl tracking-tight">
+              Are you sure you want to clear all your emotes?
+            </h3>
+          </DialogTitle>
+        </DialogHeader>
+        <DialogFooter>
+          <DialogClose asChild>
+            <Button variant="unselected">No</Button>
+          </DialogClose>
+          <DialogClose asChild>
+            <Button variant="destructive" onClick={onConfirm}>
+              Yes, Clear all emotes
+            </Button>
+          </DialogClose>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+};
