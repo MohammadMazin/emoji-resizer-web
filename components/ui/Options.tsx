@@ -37,6 +37,8 @@ const Options = () => {
   const [customSize, setCustomSize] = useState<string | null>(null);
   const [folderName, setFolderName] = useState<string>("Emotes");
   const [loading, setLoading] = useState<boolean>(false);
+  const [total, setTotal] = useState(0);
+  const [processed, setProcessed] = useState(0);
 
   async function resizeAndDownload(): Promise<void> {
     setLoading(true);
@@ -55,6 +57,10 @@ const Options = () => {
         selected: true,
       });
     }
+
+    setTotal(selectedTypes.length || 0);
+    setProcessed((_) => 0);
+
     try {
       const promises = [];
       const uniqueSizes = getUniqueSizes(selectedTypes);
@@ -80,8 +86,7 @@ const Options = () => {
                   body: JSON.stringify({ base64String, sizes: uniqueSizes }),
                 });
                 const data = await resizedGif.json();
-                // add a loop `for (const type of selectedTypes)`  that adds all the gifs into a folder
-                // make sure folder content is not overridden when
+
                 for (const type of selectedTypes) {
                   for (const size of type.sizes) {
                     const folder = zip.folder(type.folderName);
@@ -96,6 +101,7 @@ const Options = () => {
                   }
                 }
                 resolve();
+                setProcessed((prevCount) => prevCount + 1);
               } catch (error) {
                 console.log("error ", error);
                 reject(error);
@@ -117,6 +123,7 @@ const Options = () => {
               folder!.file(filename, resizedBlob);
             }
           }
+          setProcessed((prevCount) => prevCount + 1);
         }
       }
 
@@ -282,7 +289,7 @@ const Options = () => {
               className="mr-1 animate-spin"
               size={CONSTANTS.IconSize}
             />{" "}
-            Processing
+            Processing ( {processed} of {total} )
           </>
         ) : (
           <>
