@@ -103,7 +103,9 @@ const Options = () => {
                   }
                 }
                 resolve();
-                setProcessed((prevCount) => prevCount + 1);
+                setProcessed(
+                  (prevCount) => prevCount + 1 * selectedTypes.length
+                );
               } catch (error) {
                 console.log("error ", error);
                 reject(error);
