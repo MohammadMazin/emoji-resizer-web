@@ -13,7 +13,7 @@ import {
 import { AiOutlineDownload } from "react-icons/ai";
 import { ImSpinner2 } from "react-icons/im";
 import useImageStore from "@/lib/store/imageStore";
-import useEmoteTypeStore from "@/lib/store/emoteTypeStore";
+import useEmoteTypeStore, { EmoteType } from "@/lib/store/emoteTypeStore";
 import JSZip from "jszip";
 import { saveAs } from "file-saver";
 import { Input } from "./input";
@@ -35,12 +35,20 @@ import {
 } from "./dialog";
 import { DialogClose } from "@radix-ui/react-dialog";
 
+function getUniqueSizes(selectedTypes: EmoteType[]): number[] {
+  const allSizes = selectedTypes.flatMap((obj) => obj.sizes);
+  const uniqueSizes = new Set(allSizes);
+  return Array.from(uniqueSizes);
+}
+
 const Options = () => {
   const { types, updateSelectedTypes } = useEmoteTypeStore();
   const { images, removeAllImages } = useImageStore();
   const [customSize, setCustomSize] = useState<string | null>(null);
   const [folderName, setFolderName] = useState<string>("Emotes");
   const [loading, setLoading] = useState<boolean>(false);
+  const [total, setTotal] = useState(0);
+  const [processed, setProcessed] = useState(0);
 
   async function resizeAndDownload(): Promise<void> {
     setLoading(true);
@@ -60,54 +68,66 @@ const Options = () => {
       });
     }
 
+    console.log(images.length);
+
+    setTotal((selectedTypes.length || 0) * images.length);
+    setProcessed((_) => 0);
+
     try {
       const promises = [];
-      for (const type of selectedTypes) {
-        for (const size of type.sizes) {
-          for (const url of images) {
-            const [name, format] = url.data.name.split(".");
+      const uniqueSizes = getUniqueSizes(selectedTypes);
+      for (const url of images) {
+        const [name, format] = url.data.name.split(".");
+        if (format === "gif") {
+          const reader = new FileReader();
+          const blob = await getBlobFromURL(url.blob.toString());
 
-            if (format === "gif") {
-              const reader = new FileReader();
-              const folder = zip.folder(type.folderName);
-              const filename = `${type.folderName}-${name}-${size}x${size}.${format}`;
+          const promise = new Promise<void>((resolve, reject) => {
+            reader.onload = async function (event) {
+              try {
+                const readerData = event.target!.result;
+                const base64String = arrayBufferToBase64(readerData);
 
-              const blob = await getBlobFromURL(url.blob.toString());
+                // get all the unique sizes from selectedTypes
 
-              const promise = new Promise<void>((resolve, reject) => {
-                reader.onload = async function (event) {
-                  try {
-                    const readerData = event.target!.result;
-                    const base64String = arrayBufferToBase64(readerData);
+                const resizedGif = await fetch("api/", {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json",
+                  },
+                  body: JSON.stringify({ base64String, sizes: uniqueSizes }),
+                });
+                const data = await resizedGif.json();
 
-                    const resizedGif = await fetch("api/", {
-                      method: "POST",
-                      headers: {
-                        "Content-Type": "application/json",
-                      },
-                      body: JSON.stringify({ base64String, size }),
-                    });
-
-                    const data = await resizedGif.json();
-
+                for (const type of selectedTypes) {
+                  for (const size of type.sizes) {
+                    const folder = zip.folder(type.folderName);
                     const blobOutput = new Blob(
-                      [new Uint8Array(data.resizedGif.data)],
+                      [new Uint8Array(data.resizedGifs[size].data)],
                       {
                         type: "image/gif",
                       }
                     );
+                    const filename = `${type.folderName}-${name}-${size}x${size}.${format}`;
                     folder!.file(filename, blobOutput);
-                    resolve(); // Resolve the promise once the blob is added
-                  } catch (error) {
-                    console.log("error ", error);
-                    reject(error); // Reject the promise in case of an error
                   }
-                };
-              });
+                }
+                resolve();
+                setProcessed(
+                  (prevCount) => prevCount + 1 * selectedTypes.length
+                );
+              } catch (error) {
+                console.log("error ", error);
+                reject(error);
+              }
+            };
+          });
 
-              reader.readAsArrayBuffer(blob);
-              promises.push(promise);
-            } else {
+          reader.readAsArrayBuffer(blob);
+          promises.push(promise);
+        } else {
+          for (const type of selectedTypes) {
+            for (const size of type.sizes) {
               const image = await loadImage(url.blob.toString());
               const resizedCanvas = await resizeImage(image, size);
               const resizedBlob = await canvasToBlob(resizedCanvas);
@@ -116,6 +136,7 @@ const Options = () => {
               const filename = `${type.folderName}-${name}-${size}x${size}.${format}`;
               folder!.file(filename, resizedBlob);
             }
+            setProcessed((prevCount) => prevCount + 1);
           }
         }
       }
@@ -282,7 +303,7 @@ const Options = () => {
               className="mr-1 animate-spin"
               size={CONSTANTS.IconSize}
             />{" "}
-            Processing
+            Processing ( {processed} of {total} )
           </>
         ) : (
           <>

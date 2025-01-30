@@ -1,6 +1,6 @@
 import { create } from "zustand";
 
-interface EmoteType {
+export interface EmoteType {
   label: string;
   name: string;
   folderName: string;
