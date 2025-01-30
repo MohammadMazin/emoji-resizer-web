@@ -34,14 +34,21 @@ const Uploader = () => {
     accept: "image/*" as unknown as Accept,
     multiple: true,
     onDrop: async (acceptedFiles) => {
-      const files = await Promise.all(
-        acceptedFiles.map(async (file: File) => {
-          const blob = URL.createObjectURL(file);
-          const error = await validateSize(blob, file);
-          return { data: file, blob: blob, selected: false, error };
-        })
-      );
-      addImage(files);
+      try {
+        const files = await Promise.all(
+          acceptedFiles.map(async (file: File) => {
+            const blob = URL.createObjectURL(file);
+            const error = await validateSize(blob, file);
+            return { data: file, blob: blob, selected: false, error };
+          })
+        );
+        addImage(files);
+      } catch (error) {
+        console.log(error);
+        toast.error(
+          `Failed to process file. Please check if the file is an image or GIF`
+        );
+      }
     },
   });
 
