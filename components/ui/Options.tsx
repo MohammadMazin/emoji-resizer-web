@@ -124,8 +124,8 @@ const Options = () => {
               const filename = `${type.folderName}-${name}-${size}x${size}.${format}`;
               folder!.file(filename, resizedBlob);
             }
+            setProcessed((prevCount) => prevCount + 1);
           }
-          setProcessed((prevCount) => prevCount + 1);
         }
       }
 
