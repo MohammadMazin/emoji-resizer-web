@@ -58,7 +58,9 @@ const Options = () => {
       });
     }
 
-    setTotal(selectedTypes.length || 0);
+    console.log(images.length);
+
+    setTotal((selectedTypes.length || 0) * images.length);
     setProcessed((_) => 0);
 
     try {
