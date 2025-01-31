@@ -1,4 +1,4 @@
-Website Link - [Emote Stop](https://emotestop.vercel.app/) V-1.2
+Website Link - [Emote Stop](https://emotestop.vercel.app/)
 
 ## About the Project
 
