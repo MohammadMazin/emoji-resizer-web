@@ -20,9 +20,6 @@ export default function Settings() {
     let settingsString = localStorage.getItem("settings");
     if (settingsString) {
       const settings = JSON.parse(settingsString);
-      console.log(settings);
-      console.log(platforms);
-
       settings.platform = {
         twitch: platforms[0].selected,
         discord: platforms[1].selected,
