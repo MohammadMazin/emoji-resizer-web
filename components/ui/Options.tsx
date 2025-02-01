@@ -117,7 +117,7 @@ const Options = () => {
                   (prevCount) => prevCount + 1 * selectedTypes.length
                 );
               } catch (error) {
-                console.log("error ", error);
+                console.log("<CLIENT>: resizeAndDownload ERROR: ", error);
                 reject(error);
               }
             };
@@ -145,8 +145,9 @@ const Options = () => {
       const content = await zip.generateAsync({ type: "blob" });
       const output = folderName ? folderName : "Emotes";
       saveAs(content, `${output}.zip`);
+      console.log("<CLIENT>: Download successful! ");
     } catch (error) {
-      console.error("Failed to resize images and download zip:", error);
+      console.log("<CLIENT>: Failed to resize images and download zip:", error);
     } finally {
       setLoading(false);
     }

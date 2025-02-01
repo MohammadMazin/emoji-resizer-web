@@ -19,9 +19,9 @@ const Uploader = () => {
           toast.error(
             `Image '${file.name}' is not a square. The size is ${img.width}x${img.height}`
           );
-          resolve(true); // Image is not a square
+          resolve(true);
         } else {
-          resolve(false); // Image is a square
+          resolve(false);
         }
       };
       img.onerror = () => {
