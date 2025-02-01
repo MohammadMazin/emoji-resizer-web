@@ -13,18 +13,21 @@ export async function POST(req: NextRequest, res: NextResponse) {
 
     const binaryData = Buffer.from(body.base64String, "base64");
 
-    const resizedGifs = await Promise.all(body.sizes.map(async (size: number) => {
-     return await sharp(binaryData, { animated: true })
-        .resize({ width: size })
-        .toBuffer();
-    }));
-
-    let resizedGifsWithSize = {}
-     resizedGifs.forEach(
-      (gif: Buffer, index: number) => {
-        resizedGifsWithSize = {...resizedGifsWithSize , [body.sizes[index]]: gif }
-      }
+    const resizedGifs = await Promise.all(
+      body.sizes.map(async (size: number) => {
+        return await sharp(binaryData, { animated: true })
+          .resize({ width: size })
+          .toBuffer();
+      })
     );
+
+    let resizedGifsWithSize = {};
+    resizedGifs.forEach((gif: Buffer, index: number) => {
+      resizedGifsWithSize = {
+        ...resizedGifsWithSize,
+        [body.sizes[index]]: gif,
+      };
+    });
 
     // const optimizedGif = await imagemin.buffer(resizedGif, {
     //   plugins: [
@@ -39,7 +42,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
       { status: 200 }
     );
   } catch (error) {
-    console.log(error);
+    console.log("<SERVER>: Failed to resize gif: ", error);
     return NextResponse.json(
       { message: `Failed to resize gif: ${JSON.stringify(error)}` },
       { status: 404 }
