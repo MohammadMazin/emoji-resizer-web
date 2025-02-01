@@ -80,13 +80,14 @@ const Options = () => {
           const reader = new FileReader();
           const blob = await getBlobFromURL(url.blob.toString());
 
+          // todo: make a timing class
+          console.log(`GIF Image resizing START - ${name}`);
+
           const promise = new Promise<void>((resolve, reject) => {
             reader.onload = async function (event) {
               try {
                 const readerData = event.target!.result;
                 const base64String = arrayBufferToBase64(readerData);
-
-                // get all the unique sizes from selectedTypes
 
                 const resizedGif = await fetch("api/", {
                   method: "POST",
@@ -110,6 +111,7 @@ const Options = () => {
                     folder!.file(filename, blobOutput);
                   }
                 }
+                console.log(`GIF Processing done - ${name}`);
                 resolve();
                 setProcessed(
                   (prevCount) => prevCount + 1 * selectedTypes.length
