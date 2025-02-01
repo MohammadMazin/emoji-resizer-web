@@ -68,8 +68,6 @@ const Options = () => {
       });
     }
 
-    console.log(images.length);
-
     setTotal((selectedTypes.length || 0) * images.length);
     setProcessed((_) => 0);
 

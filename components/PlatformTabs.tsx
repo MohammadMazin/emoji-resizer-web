@@ -86,7 +86,6 @@ export default function PlatformTabs() {
                 value={platform.name.toLowerCase()}
                 key={platform.name}
                 className={`flex-1 ${getBackgroundColor(platform.name)}`}
-                onClick={(e) => console.log(e.target)}
               >
                 {platform.componentMini}
                 <p className="hidden sm:block">{platform.name}</p>
