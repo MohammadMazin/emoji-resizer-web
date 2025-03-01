@@ -34,6 +34,7 @@ import {
   DialogTrigger,
 } from "./dialog";
 import { DialogClose } from "@radix-ui/react-dialog";
+import { TimeLoggingService } from "@/lib/services/TimeLoggingService";
 
 function getUniqueSizes(selectedTypes: EmoteType[]): number[] {
   const allSizes = selectedTypes.flatMap((obj) => obj.sizes);
@@ -81,7 +82,8 @@ const Options = () => {
           const blob = await getBlobFromURL(url.blob.toString());
 
           // todo: make a timing class
-          console.log(`GIF Image resizing START - ${name}`);
+          const timer = new TimeLoggingService(name);
+          timer.start();
 
           const promise = new Promise<void>((resolve, reject) => {
             reader.onload = async function (event) {
@@ -111,7 +113,7 @@ const Options = () => {
                     folder!.file(filename, blobOutput);
                   }
                 }
-                console.log(`GIF Processing done - ${name}`);
+                timer.stop();
                 resolve();
                 setProcessed(
                   (prevCount) => prevCount + 1 * selectedTypes.length
