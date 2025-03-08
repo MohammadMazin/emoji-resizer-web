@@ -34,6 +34,13 @@ import {
   DialogTrigger,
 } from "./dialog";
 import { DialogClose } from "@radix-ui/react-dialog";
+import {
+  canvasToBlob,
+  loadImage,
+  resizeImage,
+  arrayBufferToBase64,
+  getBlobFromURL,
+} from "@/services/image";
 
 function getUniqueSizes(selectedTypes: EmoteType[]): number[] {
   const allSizes = selectedTypes.flatMap((obj) => obj.sizes);
@@ -153,43 +160,6 @@ const Options = () => {
     }
   }
 
-  async function loadImage(url: string): Promise<HTMLImageElement> {
-    return new Promise((resolve, reject) => {
-      const image = new Image();
-      image.onload = () => resolve(image);
-      image.onerror = (e) => reject(e);
-      image.src = url;
-    });
-  }
-
-  async function resizeImage(
-    image: HTMLImageElement,
-    size: number
-  ): Promise<HTMLCanvasElement> {
-    const canvas = document.createElement("canvas");
-    canvas.width = size;
-    canvas.height = size;
-    const context = canvas.getContext("2d");
-
-    const p = pica();
-    await p.resize(image, canvas, { unsharpAmount: 80, unsharpRadius: 0.6 });
-
-    return canvas;
-  }
-
-  async function canvasToBlob(canvas: HTMLCanvasElement): Promise<Blob> {
-    return new Promise((resolve) => {
-      canvas.toBlob((blob) => {
-        if (blob) {
-          resolve(blob);
-        } else {
-          console.error("canvas.toBlob returned null");
-          resolve(new Blob());
-        }
-      }, "image/png");
-    });
-  }
-
   function handleBClick(label: string) {
     updateSelectedTypes(label);
   }
@@ -198,21 +168,6 @@ const Options = () => {
     return (
       images.length === 0 || types.every((type) => type.selected === false)
     );
-  }
-
-  function arrayBufferToBase64(arrayBuffer: any) {
-    const uint8Array = new Uint8Array(arrayBuffer);
-    let binaryString = "";
-    for (let i = 0; i < uint8Array.length; i++) {
-      binaryString += String.fromCharCode(uint8Array[i]);
-    }
-    return btoa(binaryString);
-  }
-
-  async function getBlobFromURL(blobURL: string) {
-    const response = await fetch(blobURL);
-    const blob = await response.blob();
-    return blob;
   }
 
   function generateIcon(name: string): ReactElement | undefined {
