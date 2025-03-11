@@ -9,7 +9,7 @@ async function getToken(): Promise<string> {
     tokenInfo.setAt &&
     new Date().getTime() - tokenInfo.setAt.getTime() < 10 * 60 * 1000;
 
-  if (isTokenValid) return tokenInfo.token;
+  if (tokenInfo && isTokenValid) return tokenInfo.token;
 
   console.log("making new token");
 
