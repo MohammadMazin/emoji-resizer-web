@@ -85,7 +85,9 @@ export default function PlatformTabs() {
               <TabsTrigger
                 value={platform.name.toLowerCase()}
                 key={platform.name}
-                className={`flex-1 ${getBackgroundColor(platform.name)}`}
+                className={`flex-1 hover:bg-foreground/80 ${getBackgroundColor(
+                  platform.name
+                )}`}
               >
                 {platform.componentMini}
                 <p className="hidden sm:block">{platform.name}</p>
@@ -131,8 +133,8 @@ const AddMoreTabs = ({ visible }: { visible: boolean }) => {
     return (
       <Sheet>
         <SheetTrigger>
-          <span className="relative flex p-2 bg-gray-400 text-primary-foreground/80 border-s-2 border-primary-foreground/80 rounded-e-sm">
-            <FaPlus size={24} className="hover:opacity-75 transition-opacity" />
+          <span className="relative flex p-2 bg-gray-400 hover:bg-foreground/80  transition-opacity text-primary-foreground/80 border-s-2 border-primary-foreground/80 rounded-e-sm">
+            <FaPlus size={24} />
           </span>
         </SheetTrigger>
         <Settings />
