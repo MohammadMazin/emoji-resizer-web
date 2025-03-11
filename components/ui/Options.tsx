@@ -1,5 +1,4 @@
 "use client";
-import pica from "pica";
 import { ReactElement, useState } from "react";
 import { Button } from "./button";
 import {
@@ -27,13 +26,19 @@ import CONSTANTS from "@/lib/constants";
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from "./dialog";
 import { DialogClose } from "@radix-ui/react-dialog";
+import {
+  canvasToBlob,
+  loadImage,
+  resizeImage,
+  arrayBufferToBase64,
+  getBlobFromURL,
+} from "@/services/image";
 
 function getUniqueSizes(selectedTypes: EmoteType[]): number[] {
   const allSizes = selectedTypes.flatMap((obj) => obj.sizes);
@@ -50,7 +55,128 @@ const Options = () => {
   const [total, setTotal] = useState(0);
   const [processed, setProcessed] = useState(0);
 
-  async function resizeAndDownload(): Promise<void> {
+  async function resizeAndDownloadV2(): Promise<void> {
+    setLoading(true);
+    const selectedTypes = types.filter((type) => type.selected);
+    const zip = new JSZip();
+
+    if (customSize && customSize !== "") {
+      const customSizeArray = customSize
+        .split(",")
+        .map((size) => parseInt(size));
+      selectedTypes.push({
+        name: "Custom Size",
+        label: "Custom Size",
+        folderName: "Custom Size",
+        sizes: customSizeArray,
+        selected: true,
+      });
+    }
+
+    setTotal((selectedTypes.length || 0) * images.length);
+    setProcessed((_) => 0);
+
+    try {
+      const promises = [];
+      const uniqueSizes = getUniqueSizes(selectedTypes);
+      for (const url of images) {
+        const [name, format] = url.data.name.split(".");
+        if (format === "gif") {
+          const reader = new FileReader();
+          const blob = await getBlobFromURL(url.blob.toString());
+
+          // todo: make a timing class
+          console.log(`GIF V2 Image resizing START - ${name}`);
+
+          const promise = new Promise<void>((resolve, reject) => {
+            reader.onload = async function (event) {
+              try {
+                const readerData = event.target!.result;
+                const base64String = arrayBufferToBase64(readerData);
+
+                const filename = name;
+                await fetch("api/", {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json",
+                  },
+                  body: JSON.stringify({
+                    base64String,
+                    sizes: uniqueSizes,
+                    filename,
+                  }),
+                });
+
+                const promises = [];
+                const delay = (ms: number) =>
+                  new Promise((resolve) => setTimeout(resolve, ms));
+                await delay(2000);
+
+                for (const type of selectedTypes) {
+                  for (const size of type.sizes) {
+                    const promise = fetch(
+                      `https://daniadam.sirv.com/REST%20API%20Examples/${filename}.gif?w=${size}&format=gif&gif.lossy=0`
+                    )
+                      .then((response) => {
+                        if (!response.ok) {
+                          console.log(response);
+                          throw new Error("Network response was not ok");
+                        }
+                        return response.blob();
+                      })
+                      .then((imgAsBlob) => {
+                        const folder = zip.folder(type.folderName);
+                        const filename = `${type.folderName}-${name}-${size}x${size}.${format}`;
+                        folder!.file(filename, imgAsBlob);
+                      });
+
+                    promises.push(promise);
+                  }
+                }
+                await Promise.all(promises);
+                console.log(`GIF Processing done - ${name}`);
+                resolve();
+                setProcessed(
+                  (prevCount) => prevCount + 1 * selectedTypes.length
+                );
+              } catch (error) {
+                console.log("<CLIENT>: resizeAndDownload ERROR: ", error);
+                reject(error);
+              }
+            };
+          });
+
+          reader.readAsArrayBuffer(blob);
+          promises.push(promise);
+        } else {
+          for (const type of selectedTypes) {
+            for (const size of type.sizes) {
+              const image = await loadImage(url.blob.toString());
+              const resizedCanvas = await resizeImage(image, size);
+              const resizedBlob = await canvasToBlob(resizedCanvas);
+
+              const folder = zip.folder(type.folderName);
+              const filename = `${type.folderName}-${name}-${size}x${size}.${format}`;
+              folder!.file(filename, resizedBlob);
+            }
+            setProcessed((prevCount) => prevCount + 1);
+          }
+        }
+      }
+
+      await Promise.all(promises);
+      const content = await zip.generateAsync({ type: "blob" });
+      const output = folderName ? folderName : "Emotes";
+      saveAs(content, `${output}.zip`);
+      console.log("<CLIENT>: Download successful! ");
+    } catch (error) {
+      console.log("<CLIENT>: Failed to resize images and download zip:", error);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  async function resizeAndDownloadV1(): Promise<void> {
     setLoading(true);
     const selectedTypes = types.filter((type) => type.selected);
     const zip = new JSZip();
@@ -90,7 +216,7 @@ const Options = () => {
                 const base64String = arrayBufferToBase64(readerData);
 
                 const resizedGif = await fetch("api/", {
-                  method: "POST",
+                  method: "PUT",
                   headers: {
                     "Content-Type": "application/json",
                   },
@@ -153,43 +279,6 @@ const Options = () => {
     }
   }
 
-  async function loadImage(url: string): Promise<HTMLImageElement> {
-    return new Promise((resolve, reject) => {
-      const image = new Image();
-      image.onload = () => resolve(image);
-      image.onerror = (e) => reject(e);
-      image.src = url;
-    });
-  }
-
-  async function resizeImage(
-    image: HTMLImageElement,
-    size: number
-  ): Promise<HTMLCanvasElement> {
-    const canvas = document.createElement("canvas");
-    canvas.width = size;
-    canvas.height = size;
-    const context = canvas.getContext("2d");
-
-    const p = pica();
-    await p.resize(image, canvas, { unsharpAmount: 80, unsharpRadius: 0.6 });
-
-    return canvas;
-  }
-
-  async function canvasToBlob(canvas: HTMLCanvasElement): Promise<Blob> {
-    return new Promise((resolve) => {
-      canvas.toBlob((blob) => {
-        if (blob) {
-          resolve(blob);
-        } else {
-          console.error("canvas.toBlob returned null");
-          resolve(new Blob());
-        }
-      }, "image/png");
-    });
-  }
-
   function handleBClick(label: string) {
     updateSelectedTypes(label);
   }
@@ -198,21 +287,6 @@ const Options = () => {
     return (
       images.length === 0 || types.every((type) => type.selected === false)
     );
-  }
-
-  function arrayBufferToBase64(arrayBuffer: any) {
-    const uint8Array = new Uint8Array(arrayBuffer);
-    let binaryString = "";
-    for (let i = 0; i < uint8Array.length; i++) {
-      binaryString += String.fromCharCode(uint8Array[i]);
-    }
-    return btoa(binaryString);
-  }
-
-  async function getBlobFromURL(blobURL: string) {
-    const response = await fetch(blobURL);
-    const blob = await response.blob();
-    return blob;
   }
 
   function generateIcon(name: string): ReactElement | undefined {
@@ -296,7 +370,7 @@ const Options = () => {
       <Button
         radius={"none"}
         disabled={disableDownloadButton() || loading}
-        onClick={resizeAndDownload}
+        onClick={resizeAndDownloadV2}
       >
         {loading ? (
           <>
