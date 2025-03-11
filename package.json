@@ -25,6 +25,7 @@
         "canvas": "^2.11.2",
         "canvas-capture": "github:amandaghassaei/canvas-capture",
         "class-variance-authority": "^0.7.0",
+        "cloudinary": "^2.5.1",
         "clsx": "^2.1.0",
         "eslint": "8.46.0",
         "eslint-config-next": "13.4.12",
