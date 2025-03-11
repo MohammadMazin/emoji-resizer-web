@@ -34,7 +34,7 @@ const YoutubeChat = ({
           src="/noImage-1.png"
           alt="no uploaded image"
           width={200}
-          height={180}
+          height={160}
           className="mt-4"
         />
       </section>
@@ -54,20 +54,15 @@ const YoutubeChat = ({
             : "bg-youtube-chat-light hover:bg-youtube-chat-light-hover text-black"
         } flex-1 flex gap-1 p-2 items-center flex-wrap text-sx`}
       >
-        {/* {defaultBadges.map((file, index) => (
-          <ImagePreview key={index} file={file.link} size={18} />
-        ))} */}
-        <ProfilePicture width={24} height={24} />
-
-        <span className="text-sx font-semibold text-gray-500">
+        <ProfilePicture width={24} height={24} />{" "}
+        <span className="text-sx font-semibold text-gray-500 ml-[8px] mr-[4px] flex gap-2">
           kayleberries
+          {images
+            .filter((file) => file.selected)
+            .map((file, index) => (
+              <ImagePreview key={index} file={file.blob} size={16} />
+            ))}
         </span>
-        {/* TODO: add stuff for badges */}
-        {/* {images
-          .filter((file) => file.selected)
-          .map((file, index) => (
-            <ImagePreview key={index} file={file.blob} size={16} />
-          ))} */}
         <div className="flex gap-[0.1rem]">
           {images.map((file, index) => (
             <>
