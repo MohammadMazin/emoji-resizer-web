@@ -32,13 +32,13 @@ async function getToken(): Promise<string> {
   throw new Error(data.message);
 }
 
-async function getImageAsBlob(buffer: Buffer): Promise<Blob> {
-  const DESIRED_WIDTH = 300;
+async function getImageAsBlob(buffer: Buffer, sizes: number[]): Promise<Blob> {
+  const DESIRED_WIDTH = Math.max(500, ...sizes);
   const imageWidth = await sharp(buffer)
     .metadata()
     .then((metadata) => metadata.width);
 
-  if (imageWidth && imageWidth < DESIRED_WIDTH) {
+  if (imageWidth && imageWidth <= DESIRED_WIDTH) {
     return new Blob([buffer], { type: "image/gif" });
   }
   const resizedGif = await sharp(buffer, { animated: true })
@@ -56,7 +56,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
       throw new Error("Missing required fields");
 
     const binaryData = Buffer.from(body.base64String, "base64");
-    const blob = await getImageAsBlob(binaryData);
+    const blob = await getImageAsBlob(binaryData, body.sizes);
 
     const sirvUploadUrl = `https://api.sirv.com/v2/files/upload?filename=%2FREST%20API%20Examples%2F${body.filename}.gif`;
     const sirvApiKey = await getToken();
