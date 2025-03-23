@@ -6,6 +6,7 @@ import useImageStore from "@/lib/store/imageStore";
 import ImagePreview from "./ImagePreview";
 import CONSTANTS from "@/lib/constants";
 import { toast } from "react-hot-toast";
+import Info from "./Info";
 
 const Uploader = () => {
   const { images, addImage } = useImageStore();
@@ -108,6 +109,7 @@ const Uploader = () => {
 
   return (
     <div className="h-full flex-1 flex flex-col p-4 border-2 border-gray-400 border-dashed rounded-xl overflow-y-scroll cursor-pointer hover:text-gray-400">
+      <Info message="I fixed a few issues regarding resizing GIFs. If unexpected errors still happen, feel free to contact me!" />
       <div
         {...getRootProps()}
         className="flex flex-col justify-start h-full gap-2"

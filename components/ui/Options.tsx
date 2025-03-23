@@ -135,7 +135,6 @@ const Options = () => {
                 );
                 formData.append("sizes", JSON.stringify(uniqueSizes));
                 formData.append("filename", name);
-
                 const filename = name;
                 const sendFile = await fetch("api/", {
                   method: "POST",
