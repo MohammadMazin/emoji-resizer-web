@@ -51,7 +51,7 @@ export default function RootLayout({
         ></script>
         <CSPostHogProvider>
           <Analytics />
-          <Toaster />
+          <Toaster position="bottom-center" />
           <NextTopLoader
             color={CONSTANTS.colors.secondary}
             template='<div class="bar" role="bar"><div class="peg"></div></div>'

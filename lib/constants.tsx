@@ -6,6 +6,7 @@ import Options from "@/components/ui/Options";
 const CONSTANTS = {
   IconSize: 25,
   MaxImagesAllowed: 15,
+  MaxAllowedGIFSizeInMB: 4.5,
   defaultBadges: [
     {
       name: "Staff",
