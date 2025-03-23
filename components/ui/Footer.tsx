@@ -40,7 +40,7 @@ const FeedbackModal = () => {
         <DialogTrigger className="mt-auto">
           {" "}
           <div className="flex gap-2 text-yellow-500 items-center text-left ps-2 hover:text-yellow-600 transition-colors">
-            Share your feedback{" "}
+            Share your feedback V1.2.2{" "}
             <IoAlertCircleOutline size={CONSTANTS.IconSize} />
           </div>
         </DialogTrigger>
