@@ -45,7 +45,9 @@ export async function POST(req: NextRequest, res: NextResponse) {
 
     if (!(file instanceof Blob)) throw new Error("File must be of type Blob");
 
-    const sirvUploadUrl = `https://api.sirv.com/v2/files/upload?filename=%2FREST%20API%20Examples%2F${filename}.gif`;
+    const sirvUploadUrl = `https://api.sirv.com/v2/files/upload?filename=%2FREST%20API%20Examples%2F${encodeURIComponent(
+      filename
+    )}.gif`;
     const sirvApiKey = await getToken();
 
     const arrayBuffer = await file.arrayBuffer();
