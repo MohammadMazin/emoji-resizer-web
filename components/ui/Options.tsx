@@ -42,6 +42,7 @@ import {
   getBlobFromURL,
 } from "@/services/image";
 import toast from "react-hot-toast";
+import { log } from "console";
 
 function getUniqueSizes(selectedTypes: EmoteType[]): number[] {
   const allSizes = selectedTypes.flatMap((obj) => obj.sizes);
@@ -128,6 +129,8 @@ const Options = () => {
                   access: "public",
                   handleUploadUrl: "/api",
                 });
+
+                console.log("newBlob", newBlob);
 
                 const sendFile = await fetch("api/", {
                   method: "POST",
