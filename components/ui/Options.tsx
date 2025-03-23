@@ -72,6 +72,7 @@ const Options = () => {
 
   async function resizeAndDownloadV2(): Promise<void> {
     setLoading(true);
+    let hasShownToastErrorForMaxSize = false;
     const selectedTypes = types.filter((type) => type.selected);
     const zip = new JSZip();
 
@@ -103,6 +104,17 @@ const Options = () => {
         if (format === "gif") {
           const reader = new FileReader();
           const blob = await getBlobFromURL(url.blob.toString());
+          const blobSizeInMB = blob.size / 1024 / 1024;
+          if (blobSizeInMB > CONSTANTS.MaxAllowedGIFSizeInMB) {
+            if (!hasShownToastErrorForMaxSize) {
+              toast.error(
+                `Some GIFs are larger than ${CONSTANTS.MaxAllowedGIFSizeInMB}MB and cannot be resized`
+              );
+              hasShownToastErrorForMaxSize = true;
+            }
+            setProcessed((prevCount) => prevCount + 1 * selectedTypes.length);
+            continue;
+          }
 
           // todo: make a timing class
           console.log(`GIF V2 Image resizing START - ${name}`);
@@ -120,7 +132,7 @@ const Options = () => {
                     "file",
                     "image/gif"
                   )
-                ); // `file` is the actual file object
+                );
                 formData.append("sizes", JSON.stringify(uniqueSizes));
                 formData.append("filename", name);
 
@@ -135,7 +147,9 @@ const Options = () => {
                     toast.error(
                       "File too large to process. Please try again with a smaller file."
                     );
-                    throw new Error("File too large");
+                    throw new Error(
+                      "Payload sent to the server was too large. This would only happen if the previous 4.5mb file size check failed"
+                    );
                   }
                 }
 
@@ -196,11 +210,13 @@ const Options = () => {
         }
       }
 
-      await Promise.all(promises);
-      const content = await zip.generateAsync({ type: "blob" });
-      const output = folderName ? folderName : "Emotes";
-      saveAs(content, `${output}.zip`);
-      console.log("<CLIENT>: Download successful! ");
+      if (promises.length > 0) {
+        await Promise.all(promises);
+        const content = await zip.generateAsync({ type: "blob" });
+        const output = folderName ? folderName : "Emotes";
+        saveAs(content, `${output}.zip`);
+        console.log("<CLIENT>: Download successful! ");
+      } else console.log("<CLIENT>: Nothing to download! ");
     } catch (error) {
       console.log("<CLIENT>: Failed to resize images and download zip:", error);
     } finally {
