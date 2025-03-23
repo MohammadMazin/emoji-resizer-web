@@ -39,11 +39,26 @@ import {
   arrayBufferToBase64,
   getBlobFromURL,
 } from "@/services/image";
+import toast from "react-hot-toast";
 
 function getUniqueSizes(selectedTypes: EmoteType[]): number[] {
   const allSizes = selectedTypes.flatMap((obj) => obj.sizes);
   const uniqueSizes = new Set(allSizes);
   return Array.from(uniqueSizes);
+}
+
+function arrayBufferToFile(
+  arrayBuffer: ArrayBuffer,
+  filename: string,
+  mimeType: string
+) {
+  // Create a Blob from the ArrayBuffer
+  const blob = new Blob([arrayBuffer], { type: mimeType });
+
+  // Convert the Blob to a File
+  const file = new File([blob], filename, { type: mimeType });
+
+  return file;
 }
 
 const Options = () => {
@@ -80,7 +95,11 @@ const Options = () => {
       const promises = [];
       const uniqueSizes = getUniqueSizes(selectedTypes);
       for (const url of images) {
-        const [name, format] = url.data.name.split(".");
+        const fullname = url.data.name;
+        const dotIndex = fullname.lastIndexOf(".");
+        const name = dotIndex !== -1 ? fullname.slice(0, dotIndex) : fullname; // Handles case where there's no dot
+        const format = dotIndex !== -1 ? fullname.slice(dotIndex + 1) : "";
+
         if (format === "gif") {
           const reader = new FileReader();
           const blob = await getBlobFromURL(url.blob.toString());
@@ -92,20 +111,33 @@ const Options = () => {
             reader.onload = async function (event) {
               try {
                 const readerData = event.target!.result;
-                const base64String = arrayBufferToBase64(readerData);
+
+                const formData = new FormData();
+                formData.append(
+                  "file",
+                  arrayBufferToFile(
+                    readerData as ArrayBuffer,
+                    "file",
+                    "image/gif"
+                  )
+                ); // `file` is the actual file object
+                formData.append("sizes", JSON.stringify(uniqueSizes));
+                formData.append("filename", name);
 
                 const filename = name;
-                await fetch("api/", {
+                const sendFile = await fetch("api/", {
                   method: "POST",
-                  headers: {
-                    "Content-Type": "application/json",
-                  },
-                  body: JSON.stringify({
-                    base64String,
-                    sizes: uniqueSizes,
-                    filename,
-                  }),
+                  body: formData,
                 });
+
+                if (!sendFile.ok) {
+                  if (sendFile.status === 413) {
+                    toast.error(
+                      "File too large to process. Please try again with a smaller file."
+                    );
+                    throw new Error("File too large");
+                  }
+                }
 
                 const promises = [];
                 const delay = (ms: number) =>
