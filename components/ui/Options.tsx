@@ -1,6 +1,8 @@
 "use client";
 import { ReactElement, useState } from "react";
 import { Button } from "./button";
+import { type PutBlobResult } from "@vercel/blob";
+import { upload } from "@vercel/blob/client";
 import {
   BsCheckSquare,
   BsSquare,
@@ -111,20 +113,22 @@ const Options = () => {
             reader.onload = async function (event) {
               try {
                 const readerData = event.target!.result;
+                const file = arrayBufferToFile(
+                  readerData as ArrayBuffer,
+                  "file",
+                  "image/gif"
+                );
 
                 const formData = new FormData();
-                formData.append(
-                  "file",
-                  arrayBufferToFile(
-                    readerData as ArrayBuffer,
-                    "file",
-                    "image/gif"
-                  )
-                ); // `file` is the actual file object
+                formData.append("file", file); // `file` is the actual file object
                 formData.append("sizes", JSON.stringify(uniqueSizes));
                 formData.append("filename", name);
 
-                const filename = name;
+                const newBlob = await upload(name, file, {
+                  access: "public",
+                  handleUploadUrl: "/api",
+                });
+
                 const sendFile = await fetch("api/", {
                   method: "POST",
                   body: formData,
@@ -147,7 +151,7 @@ const Options = () => {
                 for (const type of selectedTypes) {
                   for (const size of type.sizes) {
                     const promise = fetch(
-                      `https://daniadam.sirv.com/REST%20API%20Examples/${filename}.gif?w=${size}&format=gif&gif.lossy=0`
+                      `https://daniadam.sirv.com/REST%20API%20Examples/${name}.gif?w=${size}&format=gif&gif.lossy=0`
                     )
                       .then((response) => {
                         if (!response.ok) {
