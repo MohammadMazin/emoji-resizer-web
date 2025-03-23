@@ -44,7 +44,9 @@ export async function POST(req: NextRequest, res: NextResponse) {
     const binaryData = Buffer.from(body.base64String, "base64");
     const blob = new Blob([binaryData], { type: "image/gif" });
 
-    const sirvUploadUrl = `https://api.sirv.com/v2/files/upload?filename=%2FREST%20API%20Examples%2F${body.filename}.gif`;
+    const sirvUploadUrl = `https://api.sirv.com/v2/files/upload?filename=%2FREST%20API%20Examples%2F${encodeURIComponent(
+      body.filename
+    )}.gif`;
     const sirvApiKey = await getToken();
 
     const formData = new FormData();
