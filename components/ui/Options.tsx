@@ -209,13 +209,11 @@ const Options = () => {
         }
       }
 
-      if (promises.length > 0) {
-        await Promise.all(promises);
-        const content = await zip.generateAsync({ type: "blob" });
-        const output = folderName ? folderName : "Emotes";
-        saveAs(content, `${output}.zip`);
-        console.log("<CLIENT>: Download successful! ");
-      } else console.log("<CLIENT>: Nothing to download! ");
+      await Promise.all(promises);
+      const content = await zip.generateAsync({ type: "blob" });
+      const output = folderName ? folderName : "Emotes";
+      saveAs(content, `${output}.zip`);
+      console.log("<CLIENT>: Download successful! ");
     } catch (error) {
       console.log("<CLIENT>: Failed to resize images and download zip:", error);
     } finally {
