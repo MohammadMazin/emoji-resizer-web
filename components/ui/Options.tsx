@@ -226,6 +226,7 @@ const Options = () => {
     }
   }
 
+  // make sure v1 has the same functionality as v2 if required
   async function resizeAndDownloadV1(): Promise<void> {
     setLoading(true);
     const selectedTypes = types.filter((type) => type.selected);
