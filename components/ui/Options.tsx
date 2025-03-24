@@ -73,6 +73,7 @@ const Options = () => {
   async function resizeAndDownloadV2(): Promise<void> {
     setLoading(true);
     let hasShownToastErrorForMaxSize = false;
+    let hasProcessedAtLeastOne = false;
     const selectedTypes = types.filter((type) => type.selected);
     const zip = new JSZip();
 
@@ -172,6 +173,7 @@ const Options = () => {
                       .then((imgAsBlob) => {
                         const folder = zip.folder(type.folderName);
                         const filename = `${type.folderName}-${name}-${size}x${size}.${format}`;
+                        hasProcessedAtLeastOne = true;
                         folder!.file(filename, imgAsBlob);
                       });
 
@@ -202,6 +204,7 @@ const Options = () => {
 
               const folder = zip.folder(type.folderName);
               const filename = `${type.folderName}-${name}-${size}x${size}.${format}`;
+              hasProcessedAtLeastOne = true;
               folder!.file(filename, resizedBlob);
             }
             setProcessed((prevCount) => prevCount + 1);
@@ -209,11 +212,13 @@ const Options = () => {
         }
       }
 
-      await Promise.all(promises);
-      const content = await zip.generateAsync({ type: "blob" });
-      const output = folderName ? folderName : "Emotes";
-      saveAs(content, `${output}.zip`);
-      console.log("<CLIENT>: Download successful! ");
+      if (hasProcessedAtLeastOne) {
+        await Promise.all(promises);
+        const content = await zip.generateAsync({ type: "blob" });
+        const output = folderName ? folderName : "Emotes";
+        saveAs(content, `${output}.zip`);
+        console.log("<CLIENT>: Download successful! ");
+      } else console.log("<CLIENT>: Nothing to download! ");
     } catch (error) {
       console.log("<CLIENT>: Failed to resize images and download zip:", error);
     } finally {
