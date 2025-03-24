@@ -212,8 +212,8 @@ const Options = () => {
         }
       }
 
+      await Promise.all(promises);
       if (hasProcessedAtLeastOne) {
-        await Promise.all(promises);
         const content = await zip.generateAsync({ type: "blob" });
         const output = folderName ? folderName : "Emotes";
         saveAs(content, `${output}.zip`);
