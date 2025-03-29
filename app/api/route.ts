@@ -58,6 +58,8 @@ export async function POST(req: NextRequest, res: NextResponse) {
     const sizes = body.get("sizes") as unknown as string;
     const filename = body.get("filename") as unknown as string;
 
+    console.time(`<SERVER>: Processing ${filename}`);
+
     if (!file || !sizes || !filename)
       throw new Error("Missing required fields");
 
@@ -79,6 +81,8 @@ export async function POST(req: NextRequest, res: NextResponse) {
       headers: headers,
       body: blob,
     });
+
+    console.timeEnd(`<SERVER>: Processing ${filename}`);
 
     if (response.status === 200) {
       return NextResponse.json(
