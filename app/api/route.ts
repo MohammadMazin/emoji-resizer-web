@@ -32,12 +32,30 @@ async function getToken(): Promise<string> {
   throw new Error(data.message);
 }
 
+async function getImageAsBlob(file: File, sizes: number[]): Promise<Blob> {
+  const DESIRED_WIDTH = Math.max(500, ...sizes);
+  const arrayBuffer = await file.arrayBuffer();
+  const buffer = Buffer.from(arrayBuffer);
+
+  const imageWidth = await sharp(buffer)
+    .metadata()
+    .then((metadata) => metadata.width);
+
+  if (imageWidth && imageWidth <= DESIRED_WIDTH) {
+    return new Blob([buffer], { type: "image/gif" });
+  }
+  const resizedGif = await sharp(buffer, { animated: true })
+    .resize({ width: DESIRED_WIDTH })
+    .toBuffer();
+  return new Blob([resizedGif], { type: "image/gif" });
+}
+
 // v2
 export async function POST(req: NextRequest, res: NextResponse) {
   try {
     const body = await req.formData();
     const file = body.get("file") as File;
-    const sizes = body.get("sizes") as unknown as number[];
+    const sizes = body.get("sizes") as unknown as string;
     const filename = body.get("filename") as unknown as string;
 
     console.time(`<SERVER>: Processing ${filename}`);
@@ -46,15 +64,12 @@ export async function POST(req: NextRequest, res: NextResponse) {
       throw new Error("Missing required fields");
 
     if (!(file instanceof Blob)) throw new Error("File must be of type Blob");
+    const blob = await getImageAsBlob(file, JSON.parse(sizes));
 
     const sirvUploadUrl = `https://api.sirv.com/v2/files/upload?filename=%2FREST%20API%20Examples%2F${encodeURIComponent(
       filename
     )}.gif`;
     const sirvApiKey = await getToken();
-
-    const arrayBuffer = await file.arrayBuffer();
-    const buffer = Buffer.from(arrayBuffer);
-    const blob = new Blob([buffer], { type: "image/gif" });
 
     const headers = {
       Authorization: `Bearer ${sirvApiKey}`,
