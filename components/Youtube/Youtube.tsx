@@ -84,8 +84,13 @@ const Youtube = () => {
         </div>
       </div>
       <div className="rounded-xl">
+        <p>Comments</p>
         <YoutubeChat darkMode />
         <YoutubeChat />
+        <br />
+        <p>Livestream chat</p>
+        <YoutubeChat darkMode liveChat />
+        <YoutubeChat liveChat />
       </div>
     </div>
   );
