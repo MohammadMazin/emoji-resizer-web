@@ -28,6 +28,7 @@ const Uploader = () => {
       }
 
       img.onload = () => {
+        setGifsToStart();
         if (img.width !== img.height) {
           toast.error(
             `Image '${file.name}' is not a square. The size is ${img.width}x${img.height}`
@@ -64,6 +65,14 @@ const Uploader = () => {
       }
     },
   });
+
+  const setGifsToStart = () => {
+    Array.from(document.getElementsByTagName("img")).forEach((img) => {
+      let imgSrc = img.src;
+      img.src = "";
+      img.src = imgSrc;
+    });
+  };
 
   useEffect(() => {
     const handlePaste = async (event: ClipboardEvent) => {
