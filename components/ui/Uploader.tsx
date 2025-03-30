@@ -6,14 +6,27 @@ import useImageStore from "@/lib/store/imageStore";
 import ImagePreview from "./ImagePreview";
 import CONSTANTS from "@/lib/constants";
 import { toast } from "react-hot-toast";
+import Info from "./Info";
 
 const Uploader = () => {
   const { images, addImage } = useImageStore();
 
-  const validateSize = (blob: string, file: File): Promise<boolean> => {
+  const validateSizeAndDimensions = (
+    blob: string,
+    file: File
+  ): Promise<boolean> => {
     return new Promise((resolve, reject) => {
       const img = new Image();
       img.src = blob;
+
+      const maxSizeInBytes = CONSTANTS.MaxAllowedGIFSizeInMB * 1024 * 1024;
+      if (file.size > maxSizeInBytes) {
+        toast.error(
+          `Image '${file.name}' is greater than ${CONSTANTS.MaxAllowedGIFSizeInMB}MB. It cannot be resized and will not be processed`
+        );
+        resolve(true);
+      }
+
       img.onload = () => {
         if (img.width !== img.height) {
           toast.error(
@@ -38,7 +51,7 @@ const Uploader = () => {
         const files = await Promise.all(
           acceptedFiles.map(async (file: File) => {
             const blob = URL.createObjectURL(file);
-            const error = await validateSize(blob, file);
+            const error = await validateSizeAndDimensions(blob, file);
             return { data: file, blob: blob, selected: false, error };
           })
         );
@@ -70,7 +83,7 @@ const Uploader = () => {
               lastModified: file.lastModified,
             });
             const blob = URL.createObjectURL(newFile);
-            const error = await validateSize(blob, file);
+            const error = await validateSizeAndDimensions(blob, file);
 
             files.push({
               data: newFile,
@@ -96,6 +109,7 @@ const Uploader = () => {
 
   return (
     <div className="h-full flex-1 flex flex-col p-4 border-2 border-gray-400 border-dashed rounded-xl overflow-y-scroll cursor-pointer hover:text-gray-400">
+      <Info message="I fixed a few issues regarding resizing GIFs. If unexpected errors still happen, feel free to contact me!" />
       <div
         {...getRootProps()}
         className="flex flex-col justify-start h-full gap-2"
@@ -124,6 +138,10 @@ const Uploader = () => {
           <div className="flex flex-col justify-center items-center h-full gap-2 cursor-pointer text-center">
             <p>Drag and drop some images here, or click to select images</p>
             <p>You can also press Ctrl + V to paste your image here</p>
+            <br />
+            <b>
+              (GIFs must be smaller than {CONSTANTS.MaxAllowedGIFSizeInMB}MB)
+            </b>
             <FiUpload size={50} />
           </div>
         )}

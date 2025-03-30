@@ -35,20 +35,26 @@ async function getToken(): Promise<string> {
 // v2
 export async function POST(req: NextRequest, res: NextResponse) {
   try {
-    const body = await req.json();
+    const body = await req.formData();
+    const file = body.get("file") as File;
+    const sizes = body.get("sizes") as unknown as number[];
+    const filename = body.get("filename") as unknown as string;
 
-    if (!body.base64String || !body.sizes || !body.filename) {
+    console.time(`<SERVER>: Processing ${filename}`);
+
+    if (!file || !sizes || !filename)
       throw new Error("Missing required fields");
-    }
 
-    const binaryData = Buffer.from(body.base64String, "base64");
-    const blob = new Blob([binaryData], { type: "image/gif" });
+    if (!(file instanceof Blob)) throw new Error("File must be of type Blob");
 
-    const sirvUploadUrl = `https://api.sirv.com/v2/files/upload?filename=%2FREST%20API%20Examples%2F${body.filename}.gif`;
+    const sirvUploadUrl = `https://api.sirv.com/v2/files/upload?filename=%2FREST%20API%20Examples%2F${encodeURIComponent(
+      filename
+    )}.gif`;
     const sirvApiKey = await getToken();
 
-    const formData = new FormData();
-    formData.append("file", blob, "uploaded_image");
+    const arrayBuffer = await file.arrayBuffer();
+    const buffer = Buffer.from(arrayBuffer);
+    const blob = new Blob([buffer], { type: "image/gif" });
 
     const headers = {
       Authorization: `Bearer ${sirvApiKey}`,
@@ -60,6 +66,8 @@ export async function POST(req: NextRequest, res: NextResponse) {
       headers: headers,
       body: blob,
     });
+
+    console.timeEnd(`<SERVER>: Processing ${filename}`);
 
     if (response.status === 200) {
       return NextResponse.json(
