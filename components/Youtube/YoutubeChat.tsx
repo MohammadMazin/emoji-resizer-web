@@ -14,7 +14,7 @@ const YoutubeChat = ({
   liveChat = false,
 }: YoutubeChatProps) => {
   const { images } = useImageStore();
-  const { chatMessage } = usePlatformStore();
+  const { chatMessage, usernameColor } = usePlatformStore();
 
   if (images.length === 0) {
     return (
@@ -57,7 +57,7 @@ const YoutubeChat = ({
         >
           <ProfilePicture width={24} height={24} />{" "}
           <span className="text-sx font-semibold text-gray-500 ml-[8px] mr-[4px] flex gap-2">
-            kayleberries
+            <p style={{ color: usernameColor }}>kayleberries</p>
             {images
               .filter((file) => file.selected)
               .map((file, index) => (
