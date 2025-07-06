@@ -77,7 +77,7 @@ const DiscordChat = ({
 
   return (
     <div
-      className={`${assignBackground()} flex-1 p-4 flex-col gap-2 h-max`}
+      className={`${assignBackground()} flex-1 p-4 flex-col gap-2 h-max discord-chat`}
       style={{ minHeight: "2.75rem" }}
     >
       {isReply && (
@@ -199,7 +199,7 @@ type ProfilePictureProps = {
 };
 const ProfilePicture = ({ width, height }: ProfilePictureProps) => {
   return (
-    <Image
+    <img
       src="/discordProfile.jpg"
       alt="discord profile pic"
       width={width || 50}

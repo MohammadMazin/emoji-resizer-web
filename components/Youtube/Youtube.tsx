@@ -13,6 +13,8 @@ import {
 } from "@radix-ui/react-tooltip";
 import { Button } from "../ui/button";
 import CONSTANTS from "@/lib/constants";
+import { AiOutlineDownload } from "react-icons/ai";
+import { downloadScreenshot } from "@/services/image";
 
 const Youtube = () => {
   const { images, updateImageSelected } = useImageStore();
@@ -62,7 +64,13 @@ const Youtube = () => {
     <div className="overflow-y-scroll  max-h-[75vh] flex flex-col gap-2">
       {/* <Info message="Preview of Badges will be added soon!" /> */}
       <div className="flex flex-col gap-1">
-        <h1 className="font-medium mb-1">Select Badges</h1>
+        <div className="flex items-center justify-between">
+          <h1 className="font-medium mb-1">Select Badges</h1>
+          <Button onClick={() => downloadScreenshot("youtube-chat")}>
+            <AiOutlineDownload className="mr-1" size={CONSTANTS.IconSize} />{" "}
+            Screenshot
+          </Button>
+        </div>
         <div className="p-2 max-w-full overflow-x-auto whitespace-nowrap">
           {images.map((badge) => (
             <Button
@@ -83,7 +91,12 @@ const Youtube = () => {
           ))}
         </div>
       </div>
-      <div className="rounded-xl">
+      <div
+        className="rounded-xl"
+        style={{
+          lineHeight: "initial !important",
+        }}
+      >
         <p>Comments</p>
         <YoutubeChat darkMode />
         <YoutubeChat />

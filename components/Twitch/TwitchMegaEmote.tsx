@@ -21,7 +21,7 @@ const TwitchMegaEmote = ({
     <div
       className={`${
         darkMode ? "bg-twitch-chat-dark" : "bg-twitch-chat-light"
-      } p-2`}
+      } p-2 ${megaEmote && "twitch-chat"}`}
     >
       <div
         className={`
@@ -63,7 +63,6 @@ const TwitchMegaEmote = ({
             Click on an emote to gigantify it!
           </div>
         )}
-        {/*  */}
       </div>
     </div>
   );

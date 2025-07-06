@@ -47,7 +47,7 @@ const TwitchChat = ({
     <div
       className={`${
         darkMode ? "bg-twitch-chat-dark" : "bg-twitch-chat-light"
-      } p-2`}
+      } p-2 twitch-chat`}
     >
       <div
         className={`${

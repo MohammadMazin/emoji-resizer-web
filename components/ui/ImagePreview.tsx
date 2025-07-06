@@ -33,7 +33,7 @@ const ImagePreview = ({
           <ImCross color="#FFF" size={12} />
         </div>
       )}
-      <Image
+      <img
         className={`${error && "border-4 border-red-600 rounded-md"}`}
         alt="emote"
         src={file}

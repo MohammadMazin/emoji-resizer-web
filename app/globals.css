@@ -3,6 +3,12 @@
 @tailwind utilities;
 
 @layer base {
+  img {
+    @apply inline-block;
+  }
+}
+
+@layer base {
   :root {
     --background: 292 94% 8%;
     --foreground: 0 0% 90%;
@@ -54,7 +60,6 @@
     --discord-chat-dark-hover: 223 7% 19%;
     --discord-chat-light: 0 0% 100%;
     --discord-chat-light-hover: 0 0% 97%;
-
   }
 
   .dark {
