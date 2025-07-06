@@ -5,6 +5,10 @@ import Image from "next/image";
 import React from "react";
 import DiscordChat from "./DiscordChat";
 import Info from "../ui/Info";
+import { Button } from "../ui/button";
+import { downloadScreenshot } from "@/services/image";
+import { AiOutlineDownload } from "react-icons/ai";
+import CONSTANTS from "@/lib/constants";
 
 const Discord = () => {
   const { images } = useImageStore();
@@ -36,8 +40,22 @@ const Discord = () => {
 
   return (
     <div className="overflow-y-scroll  max-h-[70vh]">
-      <Info message="Click on an emote to see how it looks as a role next to the username!" />
-      <div className="rounded-xl">
+      <div className="flex gap-2 items-center justify-center w-full">
+        <Info
+          message="Click on an emote to see as a role next to the username!"
+          className="flex-1"
+        />
+        <Button onClick={() => downloadScreenshot("discord-chat")}>
+          <AiOutlineDownload className="mr-1" size={CONSTANTS.IconSize} />{" "}
+          Screenshot
+        </Button>
+      </div>
+      <div
+        className="rounded-xl"
+        style={{
+          lineHeight: "initial !important",
+        }}
+      >
         <DiscordChat
           darkMode
           messageType="simple"

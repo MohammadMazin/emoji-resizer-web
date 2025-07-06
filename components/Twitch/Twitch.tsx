@@ -13,6 +13,8 @@ import {
   TooltipTrigger,
 } from "../ui/tooltip";
 import TwitchMegaEmote from "./TwitchMegaEmote";
+import { downloadScreenshot } from "@/services/image";
+import { AiOutlineDownload } from "react-icons/ai";
 
 const Twitch = () => {
   const { images, updateImageSelected } = useImageStore();
@@ -65,76 +67,97 @@ const Twitch = () => {
   }
 
   return (
-    <div className="flex flex-col gap-2 overflow-y-scroll  max-h-[70vh]">
-      <div className="flex flex-col gap-1">
-        <h1 className="font-medium mb-1">Select Badges</h1>
-        <div className="p-2 max-w-full overflow-x-auto whitespace-nowrap">
-          {images.map((badge) => (
-            <Button
-              variant={badge.selected ? "selected" : "unselected"}
-              key={badge.blob}
-              onClick={() => selectCustomBadge(badge.blob)}
-              className={`hover:opacity-100 transition-opacity ${
-                badge.selected ? "opacity-100" : "opacity-50"
-              } mr-2 `}
-            >
-              <Image
-                height={18}
-                width={18}
-                src={badge.blob}
-                alt={`twitch Emote`}
-              />
+    <>
+      <div
+        className="flex flex-col gap-2 overflow-y-scroll  max-h-[70vh]"
+        style={{
+          lineHeight: "initial !important",
+        }}
+      >
+        <div className="flex flex-col gap-1">
+          <div className="flex items-center justify-between">
+            <h1 className="font-medium mb-1">Select Badges</h1>
+            <Button onClick={() => downloadScreenshot("twitch-chat")}>
+              <AiOutlineDownload className="mr-1" size={CONSTANTS.IconSize} />{" "}
+              Screenshot
             </Button>
-          ))}
+          </div>
+          <div className="p-2 max-w-full overflow-x-auto whitespace-nowrap">
+            {images.map((badge) => (
+              <Button
+                variant={badge.selected ? "selected" : "unselected"}
+                key={badge.blob}
+                onClick={() => selectCustomBadge(badge.blob)}
+                className={`hover:opacity-100 transition-opacity ${
+                  badge.selected ? "opacity-100" : "opacity-50"
+                } mr-2 `}
+              >
+                <Image
+                  height={18}
+                  width={18}
+                  src={badge.blob}
+                  alt={`twitch Emote`}
+                />
+              </Button>
+            ))}
 
-          {selectedDefaultBadges.map((badge, index) => (
-            <TooltipProvider key={badge.name}>
-              <Tooltip>
-                <TooltipTrigger>
-                  <Button
-                    variant={badge.selected ? "selected" : "unselected"}
-                    key={badge.name}
-                    onClick={() => selectDefaultBadge(badge.name)}
-                    className={`hover:opacity-100 transition-opacity ${
-                      badge.selected ? "opacity-100" : "opacity-50"
-                    } ${index !== 0 && "ml-2"} `}
-                  >
-                    <Image
-                      height={18}
-                      width={18}
-                      src={badge.link}
-                      alt={`${badge.name} twitch badge`}
-                    />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>{badge.name}</p>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-          ))}
+            {selectedDefaultBadges.map((badge, index) => (
+              <TooltipProvider key={badge.name}>
+                <Tooltip>
+                  <TooltipTrigger>
+                    <Button
+                      variant={badge.selected ? "selected" : "unselected"}
+                      key={badge.name}
+                      onClick={() => selectDefaultBadge(badge.name)}
+                      className={`hover:opacity-100 transition-opacity ${
+                        badge.selected ? "opacity-100" : "opacity-50"
+                      } ${index !== 0 && "ml-2"} `}
+                    >
+                      <Image
+                        height={18}
+                        width={18}
+                        src={badge.link}
+                        alt={`${badge.name} twitch badge`}
+                      />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>{badge.name}</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            ))}
+          </div>
         </div>
+        {/* TODO: better way to pass badges without filtering it 4 times? */}
+        <TwitchChat
+          darkMode={true}
+          defaultBadges={selectedDefaultBadges.filter(
+            (badge) => badge.selected
+          )}
+          selectMegaEmote={handleMegaEmote}
+        />
+        <TwitchChat
+          defaultBadges={selectedDefaultBadges.filter(
+            (badge) => badge.selected
+          )}
+          selectMegaEmote={handleMegaEmote}
+        />
+        <TwitchMegaEmote
+          darkMode
+          defaultBadges={selectedDefaultBadges.filter(
+            (badge) => badge.selected
+          )}
+          megaEmote={megaEmote}
+        />
+        <TwitchMegaEmote
+          defaultBadges={selectedDefaultBadges.filter(
+            (badge) => badge.selected
+          )}
+          megaEmote={megaEmote}
+        />
       </div>
-      {/* TODO: better way to pass badges without filtering it 4 times? */}
-      <TwitchChat
-        darkMode={true}
-        defaultBadges={selectedDefaultBadges.filter((badge) => badge.selected)}
-        selectMegaEmote={handleMegaEmote}
-      />
-      <TwitchChat
-        defaultBadges={selectedDefaultBadges.filter((badge) => badge.selected)}
-        selectMegaEmote={handleMegaEmote}
-      />
-      <TwitchMegaEmote
-        darkMode
-        defaultBadges={selectedDefaultBadges.filter((badge) => badge.selected)}
-        megaEmote={megaEmote}
-      />
-      <TwitchMegaEmote
-        defaultBadges={selectedDefaultBadges.filter((badge) => badge.selected)}
-        megaEmote={megaEmote}
-      />
-    </div>
+    </>
   );
 };
 

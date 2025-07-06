@@ -45,7 +45,7 @@ const YoutubeChat = ({
     <div
       className={`${
         darkMode ? "bg-youtube-chat-dark" : "bg-youtube-chat-light"
-      } p-2`}
+      } p-2 youtube-chat`}
     >
       {liveChat ? (
         <div
@@ -126,7 +126,7 @@ type ProfilePictureProps = {
 };
 const ProfilePicture = ({ width, height }: ProfilePictureProps) => {
   return (
-    <Image
+    <img
       src="/discordProfile.jpg"
       alt="discord profile pic"
       width={width || 50}
