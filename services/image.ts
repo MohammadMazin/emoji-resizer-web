@@ -1,5 +1,6 @@
 import html2canvas from "html2canvas";
 import pica from "pica";
+import posthog from "posthog-js";
 
 export async function canvasToBlob(canvas: HTMLCanvasElement): Promise<Blob> {
   return new Promise((resolve) => {
@@ -53,6 +54,7 @@ export async function getBlobFromURL(blobURL: string) {
 }
 
 export function downloadScreenshot(id: string) {
+  posthog.capture(`${id}_screenshot_clicked`);
   downloadScreenshotHTML2Canvas(id);
 }
 
