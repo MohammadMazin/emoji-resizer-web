@@ -5,11 +5,7 @@ import Image from "next/image";
 import React from "react";
 import DiscordChat from "./DiscordChat";
 import Info from "../ui/Info";
-import { Button } from "../ui/button";
-import { downloadScreenshot } from "@/services/image";
-import { AiOutlineDownload } from "react-icons/ai";
-import CONSTANTS from "@/lib/constants";
-
+import ScreenshotButton from "../ScreenshotButton";
 const Discord = () => {
   const { images } = useImageStore();
   const [selectedRole, setSelectedRole] = useState(null);
@@ -45,10 +41,7 @@ const Discord = () => {
           message="Click on an emote to see as a role next to the username!"
           className="flex-1"
         />
-        <Button onClick={() => downloadScreenshot("discord-chat")}>
-          <AiOutlineDownload className="mr-1" size={CONSTANTS.IconSize} />{" "}
-          Screenshot
-        </Button>
+        <ScreenshotButton id="discord-chat" />
       </div>
       <div
         className="rounded-xl"

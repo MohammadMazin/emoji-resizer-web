@@ -1,3 +1,4 @@
+import { getScreenshotSettings } from "@/lib/utils";
 import html2canvas from "html2canvas";
 import pica from "pica";
 import posthog from "posthog-js";
@@ -59,12 +60,14 @@ export function downloadScreenshot(id: string) {
 }
 
 export function downloadScreenshotHTML2Canvas(id: string) {
+
+  const {watermarkName,startColor,endColor} = getScreenshotSettings();
   const marginDiv = document.createElement("div");
   marginDiv.style.marginBottom = "5rem";
 
   const combinedDiv = document.createElement("div");
   combinedDiv.style.width = "500px";
-  combinedDiv.style.background = "linear-gradient(to right, #8b19d1, #b5167b)";
+  combinedDiv.style.background = `linear-gradient(to right, ${startColor}, ${endColor})`;
 
   combinedDiv.style.padding = "1.5rem";
   combinedDiv.style.width = "max-content";
@@ -75,20 +78,27 @@ export function downloadScreenshotHTML2Canvas(id: string) {
     if (index === 0) chatElement.style.borderRadius = "0.5rem 0.5rem 0 0";
     if (index === chats.length - 1)
       chatElement.style.borderRadius = "0 0 0.5rem 0.5rem";
-
     combinedDiv.appendChild(chatElement);
   });
 
   document.body.appendChild(marginDiv);
   document.body.appendChild(combinedDiv);
+  let watermarkDiv: HTMLDivElement | undefined;
+  if(watermarkName){
+    watermarkDiv = document.createElement("div");
+    watermarkDiv.style.color = "white";
+    watermarkDiv.style.fontSize = "1rem";
+    watermarkDiv.style.fontWeight = "bold";
+    watermarkDiv.style.fontFamily = "Arial, sans-serif";
+    watermarkDiv.style.textShadow = "2px 2px 4px rgba(0, 0, 0, 0.5)";
+    watermarkDiv.textContent = watermarkName;
+    combinedDiv.appendChild(watermarkDiv);
+  }
 
   html2canvas(combinedDiv, {
     allowTaint: true,
-    // scale: 1.5,
     useCORS: true,
     imageTimeout: 100,
-    // height: combinedDiv.clientHeight,
-    // width: combinedDiv.clientWidth,
   }).then((canvas) => {
     const link = document.createElement("a");
     link.download = `${id}-screenshot.png`;
