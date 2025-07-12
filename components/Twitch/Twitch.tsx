@@ -13,8 +13,7 @@ import {
   TooltipTrigger,
 } from "../ui/tooltip";
 import TwitchMegaEmote from "./TwitchMegaEmote";
-import { downloadScreenshot } from "@/services/image";
-import { AiOutlineDownload } from "react-icons/ai";
+import ScreenshotButton from "../ScreenshotButton";
 
 const Twitch = () => {
   const { images, updateImageSelected } = useImageStore();
@@ -77,10 +76,7 @@ const Twitch = () => {
         <div className="flex flex-col gap-1">
           <div className="flex items-center justify-between">
             <h1 className="font-medium mb-1">Select Badges</h1>
-            <Button onClick={() => downloadScreenshot("twitch-chat")}>
-              <AiOutlineDownload className="mr-1" size={CONSTANTS.IconSize} />{" "}
-              Screenshot
-            </Button>
+            <ScreenshotButton id="twitch-chat" />
           </div>
           <div className="p-2 max-w-full overflow-x-auto whitespace-nowrap">
             {images.map((badge) => (

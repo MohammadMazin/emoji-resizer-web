@@ -101,6 +101,10 @@ const CONSTANTS = {
   ],
   colors: {
     secondary: "#f8b10d",
+    screenshot: {
+      startColor: "#8b19d1",
+      endColor: "#b5167b",
+    },
   },
   tabs: {
     options: {
@@ -119,6 +123,9 @@ const CONSTANTS = {
       name: "discord",
       component: <Discord />,
     },
+  },
+  localStorageKeys: {
+    screenShotSettings: "screenShotSettings",
   },
 };
 
