@@ -15,7 +15,7 @@ import { Input } from "./ui/input";
 import { useEffect, useState } from "react";
 import { DialogClose } from "@radix-ui/react-dialog";
 
-export default ScreenshotButton = ({ id }: { id: string }) => {
+const ScreenshotButton = ({ id }: { id: string }) => {
   const [watermarkName, setWatermarkName] = useState<string | undefined>("");
   const [startColor, setStartColor] = useState(
     CONSTANTS.colors.screenshot.startColor
@@ -161,3 +161,5 @@ export default ScreenshotButton = ({ id }: { id: string }) => {
     </div>
   );
 };
+
+export default ScreenshotButton;
