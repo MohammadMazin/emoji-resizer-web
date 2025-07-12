@@ -4,17 +4,9 @@ import useImageStore from "@/lib/store/imageStore";
 import Image from "next/image";
 import React from "react";
 import YoutubeChat from "./YoutubeChat";
-import Info from "../ui/Info";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@radix-ui/react-tooltip";
 import { Button } from "../ui/button";
 import CONSTANTS from "@/lib/constants";
-import { AiOutlineDownload } from "react-icons/ai";
-import { downloadScreenshot } from "@/services/image";
+import ScreenshotButton from "../ScreenshotButton";
 
 const Youtube = () => {
   const { images, updateImageSelected } = useImageStore();
@@ -66,10 +58,7 @@ const Youtube = () => {
       <div className="flex flex-col gap-1">
         <div className="flex items-center justify-between">
           <h1 className="font-medium mb-1">Select Badges</h1>
-          <Button onClick={() => downloadScreenshot("youtube-chat")}>
-            <AiOutlineDownload className="mr-1" size={CONSTANTS.IconSize} />{" "}
-            Screenshot
-          </Button>
+          <ScreenshotButton id="youtube-chat" />
         </div>
         <div className="p-2 max-w-full overflow-x-auto whitespace-nowrap">
           {images.map((badge) => (
