@@ -3,42 +3,29 @@ import GIFEncoder from "gif-encoder-custom";
 import sharp from "sharp";
 import { createCanvas, Image } from "canvas";
 
-const base64ToBuffer = (base64: string) => {
-  const base64Str = base64.split(";base64,").pop() as string;
-  return Buffer.from(base64Str, "base64");
+const TRANSPARENT_RGB = { r: 255, g: 0, b: 255 };
+const TRANSPARENT_COLOR = 0xff00ff;
+
+const base64ToBuffer = (base64: string): Buffer => {
+  if (base64.includes(";base64,")) {
+    const base64Str = base64.split(";base64,").pop() as string;
+    return Buffer.from(base64Str, "base64");
+  }
+
+  return Buffer.from(base64, "base64");
 };
 
-const processImage = async (base64Img: string, size: number) => {
+const processImage = async (base64Img: string, size: number): Promise<Buffer> => {
   const imgBuffer = base64ToBuffer(base64Img);
-  const processedBuffer = await sharp(imgBuffer).resize(size, size).toBuffer();
+  const processedBuffer = await sharp(imgBuffer)
+    .ensureAlpha()
+    .resize(size, size, {
+      fit: "contain",
+      background: { r: 0, g: 0, b: 0, alpha: 0 },
+    })
+    .png()
+    .toBuffer();
   return processedBuffer;
-};
-
-const findTransparentColor = async (base64Array: string[], size: number) => {
-  const colorCounts: {
-    [key: string]: number;
-  } = {};
-
-  for (const base64Img of base64Array) {
-    const processedBuffer = await processImage(base64Img, size);
-    const image = await sharp(processedBuffer).raw().toBuffer();
-
-    for (let i = 0; i < image.length; i += 4) {
-      const color = image.slice(i, i + 3).toString();
-      colorCounts[color] = (colorCounts[color] || 0) + 1;
-    }
-  }
-
-  let transparentColor = null;
-  let minCount = Infinity;
-  for (const color in colorCounts) {
-    if (colorCounts[color] < minCount) {
-      transparentColor = color;
-      minCount = colorCounts[color];
-    }
-  }
-
-  return parseInt(transparentColor as string, 10);
 };
 
 export async function POST(req: NextRequest, res: NextResponse) {
@@ -46,15 +33,26 @@ export async function POST(req: NextRequest, res: NextResponse) {
     const body = await req.json();
     const { base64Array, size, delay, quality } = body;
 
+    if (
+      !Array.isArray(base64Array) ||
+      base64Array.length === 0 ||
+      !Number.isFinite(size) ||
+      size <= 0
+    ) {
+      return NextResponse.json(
+        { message: "Missing or invalid fields" },
+        { status: 400 }
+      );
+    }
+
     const canvas = createCanvas(size, size);
     const ctx = canvas.getContext("2d");
 
     const encoder = new GIFEncoder(size, size);
-    encoder.setDelay(delay);
+    encoder.setDelay(Number.isFinite(delay) ? delay : 500);
     encoder.setRepeat(0);
-    const transparentColor = await findTransparentColor(base64Array, size);
-    encoder.setTransparent(0xfff);
-    encoder.setQuality(quality * 3);
+    encoder.setTransparent(TRANSPARENT_COLOR);
+    encoder.setQuality(Math.max(1, Math.min(30, (Number(quality) || 10) * 3)));
     encoder.start();
 
     for (const base64Img of base64Array) {
@@ -63,9 +61,18 @@ export async function POST(req: NextRequest, res: NextResponse) {
       img.src = processedBuffer;
 
       ctx.clearRect(0, 0, size, size);
-
       ctx.drawImage(img, 0, 0);
-      encoder.addFrame(ctx);
+      const frame = ctx.getImageData(0, 0, size, size);
+
+      for (let i = 0; i < frame.data.length; i += 4) {
+        if (frame.data[i + 3] === 0) {
+          frame.data[i] = TRANSPARENT_RGB.r;
+          frame.data[i + 1] = TRANSPARENT_RGB.g;
+          frame.data[i + 2] = TRANSPARENT_RGB.b;
+        }
+      }
+
+      encoder.addFrame(frame.data);
     }
 
     encoder.finish();
@@ -76,8 +83,8 @@ export async function POST(req: NextRequest, res: NextResponse) {
   } catch (error) {
     console.log("<SERVER>: Failed to create gif: ", error);
     return NextResponse.json(
-      { message: "Failed to resize gif", error },
-      { status: 404 }
+      { message: "Failed to create gif", error },
+      { status: 500 }
     );
   }
 }

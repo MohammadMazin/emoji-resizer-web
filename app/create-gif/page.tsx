@@ -1,13 +1,11 @@
 "use client";
-import Preview from "@/components/ui/Preview";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import useImageStore from "@/lib/store/imageStore";
 import Image from "next/image";
-import Info from "@/components/ui/Info";
-import { useRouter } from "next/navigation";
+import Preview from "@/components/ui/Preview";
 
 export default function CreateGif() {
   const { images } = useImageStore();
@@ -17,54 +15,64 @@ export default function CreateGif() {
   const [size, setSize] = useState(200);
   const [memory, setMemory] = useState(0);
   const [loading, setLoading] = useState(false);
-  const router = useRouter();
+  const [error, setError] = useState("");
 
   async function createGifAPI() {
+    if (!images.length) return;
     setLoading(true);
-    //convert each blob to base64
-    const promises = [];
-    for (const image of images) {
-      const reader = new FileReader();
-      const blob = await getBlobFromURL(image.blob.toString());
-      const promise = new Promise((resolve, reject) => {
-        reader.onload = function (event) {
-          const data = arrayBufferToBase64(event?.target?.result);
-          resolve(data);
-        };
-        reader.onerror = function (event) {
-          reject(event?.target?.error);
-        };
-        reader.readAsArrayBuffer(blob);
+    setError("");
+
+    try {
+      const promises = [];
+      for (const image of images) {
+        const reader = new FileReader();
+        const blob = await getBlobFromURL(image.blob.toString());
+        const promise = new Promise((resolve, reject) => {
+          reader.onload = function (event) {
+            const data = arrayBufferToBase64(event?.target?.result);
+            resolve(data);
+          };
+          reader.onerror = function (event) {
+            reject(event?.target?.error);
+          };
+          reader.readAsArrayBuffer(blob);
+        });
+        promises.push(promise);
+      }
+
+      const base64Images = await Promise.all(promises);
+      const response = await fetch("/create-gif/api", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ base64Array: base64Images, size, delay, quality }),
       });
-      promises.push(promise);
-    }
-    const base64Images = await Promise.all(promises);
 
-    const response = await fetch("/create-gif/api", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ base64Array: base64Images, size, delay, quality }),
-    });
+      const body = await response.json();
+      if (!response.ok) {
+        throw new Error(body?.message || "Failed to create GIF");
+      }
 
-    const body = await response.json();
+      setMemory(body.resizedGif.data.length);
 
-    setMemory(body.resizedGif.data.length);
+      const blob = new Blob([new Uint8Array(body.resizedGif.data)], {
+        type: "image/gif",
+      });
+      const reader = new FileReader();
 
-    const blob = new Blob([new Uint8Array(body.resizedGif.data)], {
-      type: "application/octet-stream",
-    });
-    const reader = new FileReader();
+      reader.onloadend = function () {
+        const data = reader!.result! as string;
+        const base64data = data.split(",")[1];
+        setImgData(base64data);
+        setLoading(false);
+      };
 
-    reader.onloadend = function () {
-      const data = reader!.result! as string;
-      const base64data = data.split(",")[1]; // Split the data URL and get the Base64 part
-      setImgData(base64data);
+      reader.readAsDataURL(blob);
+    } catch (e: any) {
+      setError(e?.message || "Failed to create GIF");
       setLoading(false);
-    };
-
-    reader.readAsDataURL(blob);
+    }
   }
 
   function arrayBufferToBase64(arrayBuffer: any) {
@@ -82,86 +90,83 @@ export default function CreateGif() {
     return blob;
   }
 
-  useEffect(() => {
-    router.push("/");
-  }, []);
-
   return (
-    // <main className="overflow-hidden mt-6">
-    //   <div className="flex flex-col min-h-[85vh] lg:flex-row md:h-[85vh] px-4 gap-4 lg:justify-center lg:items-center">
-    //     <section className="h-[30vh] lg:h-full w-full">
-    //       {/* <Preview /> */}
-    //     </section>
+    <main className="overflow-hidden mt-6">
+      <div className="flex flex-col min-h-[85vh] lg:flex-row md:h-[85vh] px-4 gap-4 lg:justify-center lg:items-center">
+        <section className="h-[30vh] lg:h-full w-full">
+          <Preview />
+        </section>
 
-    //     <section className="h-[30vh] lg:h-full w-full flex flex-col justify-start gap-8">
-    //       {/* <Info message="BETA: I'm still testing this out, I'd love any feedback you have on performance or improvements" /> */}
+        <section className="h-[30vh] lg:h-full w-full flex flex-col justify-start gap-8">
+          <div className="flex gap-2 w-50 items-center">
+            Size:
+            <Input
+              value={size}
+              placeholder={"200"}
+              onChange={(e) => setSize(parseInt(e.target.value))}
+            />
+            x
+            <Input
+              value={size}
+              placeholder={"200"}
+              onChange={(e) => setSize(parseInt(e.target.value))}
+            />
+          </div>
+          <div className="flex gap-2 items-center">
+            Delay(ms)
+            <Input
+              value={delay}
+              onChange={(e) => setDelay(parseInt(e.target.value))}
+              placeholder="500"
+            />
+          </div>
+          <div className="flex gap-2 w-full">
+            Quality:
+            <span className="flex gap-2 w-full">
+              <Slider
+                className="cursor-pointer"
+                value={[quality]}
+                max={10}
+                min={1}
+                step={1}
+                onValueChange={(value) => setQuality(value[0])}
+              />
+              {quality}
+            </span>
+          </div>
 
-    //       <div className="flex gap-2 w-50 items-center">
-    //         Size:
-    //         <Input
-    //           value={size}
-    //           placeholder={"200"}
-    //           onChange={(e) => setSize(parseInt(e.target.value))}
-    //         />
-    //         x
-    //         <Input
-    //           value={size}
-    //           placeholder={"200"}
-    //           onChange={(e) => setSize(parseInt(e.target.value))}
-    //         />
-    //       </div>
-    //       <div className="flex gap-2 items-center">
-    //         Delay(ms)
-    //         <Input
-    //           onChange={(e) => setDelay(parseInt(e.target.value))}
-    //           placeholder="500"
-    //         />
-    //       </div>
-    //       <div className="flex gap-2 w-full">
-    //         Quality:
-    //         <span className="flex gap-2 w-full">
-    //           <Slider
-    //             className="cursor-pointer"
-    //             defaultValue={[10]}
-    //             max={10}
-    //             step={1}
-    //             onValueChange={(value) => setQuality(value[0])}
-    //           />
-    //           {quality}
-    //         </span>
-    //       </div>
-
-    //       <Button
-    //         className="mt-4"
-    //         onClick={createGifAPI}
-    //         disabled={loading || images.length === 0}
-    //       >
-    //         Create GIF
-    //       </Button>
-    //       {memory > 0 && (
-    //         <div className="w-full flex flex-col items-center justify-content-center">
-    //           <Image
-    //             src={`data:image/png;base64,${imgData}`}
-    //             width={280}
-    //             height={280}
-    //             alt="resized GIF"
-    //           />
-    //           <span>
-    //             <b>GIF Size:</b> {memory / 1000} KB
-    //           </span>
-    //           <div>
-    //             <h1 className="text-2xl font-bold">Limits</h1>
-    //             <p className="text-xs text-gray">
-    //               <b>Twitch:</b> 1MB file size max for auto-resize mode. If
-    //               using manual mode, each of the file sizes cannot exceed 512KB
-    //             </p>
-    //             <p>GIF images cannot be more than 60 frames</p>
-    //           </div>
-    //         </div>
-    //       )}
-    //     </section>
-    //   </div>
-    // </main>
-    <main></main>
+          <Button
+            className="mt-4"
+            onClick={createGifAPI}
+            disabled={loading || images.length === 0}
+          >
+            Create GIF
+          </Button>
+          {error ? <p className="text-red-400 text-sm">{error}</p> : null}
+          {memory > 0 && imgData && (
+            <div className="w-full flex flex-col items-center justify-content-center">
+              <Image
+                src={`data:image/gif;base64,${imgData}`}
+                width={280}
+                height={280}
+                alt="resized GIF"
+                unoptimized
+              />
+              <span>
+                <b>GIF Size:</b> {(memory / 1000).toFixed(2)} KB
+              </span>
+              <div>
+                <h1 className="text-2xl font-bold">Limits</h1>
+                <p className="text-xs text-gray">
+                  <b>Twitch:</b> 1MB file size max for auto-resize mode. If using
+                  manual mode, each of the file sizes cannot exceed 512KB
+                </p>
+                <p>GIF images cannot be more than 60 frames</p>
+              </div>
+            </div>
+          )}
+        </section>
+      </div>
+    </main>
   );
 }

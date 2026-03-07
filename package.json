@@ -39,7 +39,7 @@
     "nextjs-toploader": "^1.6.11",
     "pica": "^9.0.1",
     "postcss": "8.4.27",
-    "posthog-js": "^1.167.0",
+    "posthog-js": "^1.81.1",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-dropzone": "^14.2.3",
