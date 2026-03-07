@@ -4,9 +4,11 @@ import { FiUpload, FiPlus } from "react-icons/fi";
 import { Accept, useDropzone } from "react-dropzone";
 import useImageStore from "@/lib/store/imageStore";
 import ImagePreview from "./ImagePreview";
-import CONSTANTS from "@/lib/constants";
 import { toast } from "react-hot-toast";
 import Info from "./Info";
+
+const MAX_ALLOWED_GIF_SIZE_MB = 4.5;
+const MAX_IMAGES_ALLOWED = 15;
 
 const Uploader = () => {
   const { images, addImage } = useImageStore();
@@ -19,10 +21,10 @@ const Uploader = () => {
       const img = new Image();
       img.src = blob;
 
-      const maxSizeInBytes = CONSTANTS.MaxAllowedGIFSizeInMB * 1024 * 1024;
+      const maxSizeInBytes = MAX_ALLOWED_GIF_SIZE_MB * 1024 * 1024;
       if (file.size > maxSizeInBytes) {
         toast.error(
-          `Image '${file.name}' is greater than ${CONSTANTS.MaxAllowedGIFSizeInMB}MB. It cannot be resized and will not be processed`
+          `Image '${file.name}' is greater than ${MAX_ALLOWED_GIF_SIZE_MB}MB. It cannot be resized and will not be processed`
         );
         resolve(true);
       }
@@ -137,7 +139,7 @@ const Uploader = () => {
                 />
               </>
             ))}
-            {images.length < CONSTANTS.MaxImagesAllowed && (
+            {images.length < MAX_IMAGES_ALLOWED && (
               <div className="flex items-center justify-center h-[125px] w-[125px] border-2 border-gray-400 border-dashed rounded-xl text-gray-400 hover:text-gray-500 hover:border-gray-500">
                 <FiPlus size={50} />
               </div>
@@ -149,7 +151,7 @@ const Uploader = () => {
             <p>You can also press Ctrl + V to paste your image here</p>
             <br />
             <b>
-              (GIFs must be smaller than {CONSTANTS.MaxAllowedGIFSizeInMB}MB)
+              (GIFs must be smaller than {MAX_ALLOWED_GIF_SIZE_MB}MB)
             </b>
             <FiUpload size={50} />
           </div>
